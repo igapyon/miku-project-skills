@@ -18,6 +18,7 @@ main();
 
 function main() {
   ensureSourceExists(sourceSkillRoot, "skills/mikuproject");
+  ensureSourceExists(path.resolve(sourceSkillRoot, "index.json"), "skills/mikuproject/index.json");
   ensureSourceExists(sourceRuntimeRoot, "skills/mikuproject/runtime");
   const javaRuntime = resolveRequiredArtifact("java");
   const javaSources = resolveRequiredArtifact("java-sources");
@@ -28,7 +29,8 @@ function main() {
   fs.mkdirSync(bundleSkillsRoot, { recursive: true });
 
   fs.cpSync(sourceSkillRoot, path.resolve(bundleSkillsRoot, "mikuproject"), {
-    recursive: true
+    recursive: true,
+    filter: shouldCopyBundleEntry
   });
 
   process.stdout.write([
@@ -36,6 +38,7 @@ function main() {
     "[build:bundle] copy this directory's contents under your skill home root",
     "[build:bundle] included:",
     "  - skills/mikuproject",
+    "  - skills/mikuproject/index.json",
     `  - skills/mikuproject/runtime/${javaRuntime.name}`,
     `  - skills/mikuproject/runtime/${javaSources.name}`,
     `  - skills/mikuproject/runtime/${nodeRuntime.name}`,
@@ -48,6 +51,22 @@ function ensureSourceExists(targetPath, label) {
   if (!fs.existsSync(targetPath)) {
     throw new Error(`missing source directory: ${label}`);
   }
+}
+
+function shouldCopyBundleEntry(sourcePath) {
+  const name = path.basename(sourcePath);
+  if (name === ".DS_Store") {
+    return false;
+  }
+
+  const relativePath = path.relative(sourceSkillRoot, sourcePath);
+  if (!relativePath) {
+    return true;
+  }
+
+  return !relativePath
+    .split(path.sep)
+    .some((segment) => segment === "tmp" || segment === "output" || segment === "state");
 }
 
 function resolveRequiredArtifact(kind) {

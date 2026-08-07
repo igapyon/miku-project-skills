@@ -21,35 +21,37 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.event.inputs.tag_name || github.event.release.tag_name || github.ref }}
 
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Verify runtime artifacts
+      - name: Verify bundled runtime artifacts
         shell: bash
         run: |
           set -euo pipefail
-          test -s skills/mikuproject/runtime/mikuproject.jar
-          test -s skills/mikuproject/runtime/mikuproject.mjs
-          java -jar skills/mikuproject/runtime/mikuproject.jar ai spec >/dev/null
-          node skills/mikuproject/runtime/mikuproject.mjs ai spec >/dev/null
+          java_runtime="$(find skills/mikuproject/runtime -maxdepth 1 -type f -name 'mikuproject-*.jar' ! -name '*-sources.jar' | sort -V | tail -n 1)"
+          node_runtime="$(find skills/mikuproject/runtime -maxdepth 1 -type f -name 'mikuproject-*.mjs' | sort -V | tail -n 1)"
+          test -n "${java_runtime}"
+          test -n "${node_runtime}"
+          java -jar "${java_runtime}" --version >/dev/null
+          node "${node_runtime}" --version >/dev/null
 
-      - name: Build release bundle
+      - name: Test and build release bundle
         run: npm run build
 
       - name: Locate release zip
@@ -57,12 +59,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          zip_path="$(find bundle -maxdepth 1 -type f -name 'igapyon-mikuproject-skills-*.zip' | head -n 1)"
-          if [[ -z "${zip_path}" ]]; then
-            echo "release zip not found under bundle/" >&2
-            exit 1
-          fi
-          echo "zip_path=${zip_path}" >> "$GITHUB_OUTPUT"
+          package_version="$(node -p \"require('./package.json').version\")"
+          source_zip="bundle/igapyon-mikuproject-skills-${package_version}.zip"
+          test -s "${source_zip}"
+          target_zip="bundle/mikuproject-skills-${{ github.event.inputs.tag_name || github.event.release.tag_name || github.ref_name }}.zip"
+          cp "${source_zip}" "${target_zip}"
+          echo "zip_path=${target_zip}" >> "$GITHUB_OUTPUT"
 
       - name: Upload zip to GitHub Release
         uses: softprops/action-gh-release@v2

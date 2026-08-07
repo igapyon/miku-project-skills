@@ -105,5 +105,8 @@ Do not overreach beyond the MVP.
 
 Read these only when needed:
 
-- [references/INDEX.md](references/INDEX.md) for detailed workflow, I/O, runtime, and example references
+- [index.json](index.json) first for the generated inventory of this skill's Markdown and JSON files
+- [references/INDEX.md](references/INDEX.md) for the curated routing guide to detailed workflow, I/O, runtime, and example references
 - [references/prompts/](references/prompts/) for optional prompt templates for draft, review, schedule compression, and patch request handoff
+
+`index.json` is generated with `miku-indexgen`; do not edit it by hand.

@@ -1,3 +1,18 @@
+---
+title: Mikuproject active workflow rules
+description: Follow-up, intermediate artifact, and backend policy rules for the active skill.
+topics: [mikuproject, workflow, backend-policy]
+category: reference
+status: active
+audience: [agent]
+updated: 2026-08-06
+sources:
+  - type: local-file
+    role: primary
+    path: skills/mikuproject/SKILL.md
+    checked: 2026-08-06
+---
+
 # Active Workflow Rules
 
 Use this reference when the skill is already active and you need follow-up handling rules.
