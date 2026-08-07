@@ -1,3 +1,18 @@
+---
+title: Mikuproject operation map
+description: Agent Skill operation vocabulary and CLI/MCP backend correspondence.
+topics: [mikuproject, agent-skills, cli, mcp]
+category: reference
+status: active
+audience: [agent, maintainer]
+updated: 2026-08-06
+sources:
+  - type: local-file
+    role: primary
+    path: skills/mikuproject/config/backend-policy.json
+    checked: 2026-08-06
+---
+
 # Operations Map
 
 Use this reference when you need the supported operation list or the preferred upstream runtime surface.
@@ -63,6 +78,18 @@ Use the runtime that supports the requested operation:
 - `node skills/mikuproject/runtime/mikuproject-<version>.mjs ...`
 
 Use the upstream CLI runtime artifacts before falling back to direct file reads or UI-oriented flows.
+
+## Runtime `--help` Compatibility
+
+The bundled Java and Node.js runtime artifacts are compared as documented
+similarity, not byte-for-byte identity. The executable compatibility fixture is
+[`help-compatibility.json`](./help-compatibility.json): it records shared command
+vocabulary and Java-only / Node-only operations while checking exit status,
+stdout, stderr, and the final newline.
+
+The current `0.8.3.3` artifacts provide usage lists. The fuller AI-era command
+help contract is an upstream responsibility and is tracked in
+[`docs/upstream-mikuproject-ai-era-cli-contract-request.md`](../../../../docs/upstream-mikuproject-ai-era-cli-contract-request.md).
 
 ## Backend Operation Correspondence
 

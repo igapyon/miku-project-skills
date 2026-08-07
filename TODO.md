@@ -281,11 +281,11 @@ MCP backend を使えるようにする。
 
 ### Agent Skill documentation updates
 
-- [x] `docs/miku-soft-40-agentskills-design-v20260501.md` に execution backend policy を反映する
+- [x] execution backend policy を Agent Skill 固有文書へ反映し、共通標準のローカル複製を互換案内へ移行する
   - Agent Skill が workflow layer として残り、実行面は CLI backend / MCP backend / handoff backend を選べることを追記する
   - 既定は `cli-preferred` だが、環境 policy が上位であることを明記する
   - `cli-only` / `mcp-only` の strict policy では別 backend へ自動 fallback しないことを明記する
-  - MCP backend は `miku-soft-50` の MCP server layer を利用する形であり、Agent Skill が MCP server の実装責務を持たないことを明記する
+  - MCP backend は共通 MCP server layer を利用する形であり、Agent Skill が MCP server の実装責務を持たないことを明記する
 - [x] `skills/mikuproject/SKILL.md` の Runtime Discipline を backend policy 前提に更新する
 - [x] `skills/mikuproject/references/runtime/operations-map.md` に CLI backend と MCP backend の対応表を追加する
 - [x] `skills/mikuproject/references/workflow/active-workflow-rules.md` に backend policy をまたぐ fallback 禁止ルールを追加する
@@ -421,3 +421,15 @@ MCP 側 Phase C report tool 対応後の再開メモ:
 - [ ] Agent Skill 側で upstream 変換ロジックを再実装する
 - [ ] 外部 AI model 呼び出し、API key 管理、model selection を skill に持たせる
 - [ ] backend policy を無視して利便性だけで自動実行経路を切り替える
+
+## Maintenance records
+
+2026-08-06 | `mikuproject-skills` | Agent Skills package | miku-soft standard alignment
+
+- applied: added the generated `skills/mikuproject/index.json` discovery artifact and required it in the installable bundle
+- applied: added Node.js `>=20`, CI for Node.js 20 / 24 with Java 17, and a human-triggered Release asset workflow
+- applied: filtered local metadata and transient paths from the skill bundle; release ZIP content is smoke-tested from an isolated extraction
+- applied: replaced copied miku-soft standards with compatibility links and `docs/miku-soft-reference.md`
+- applied: added documented Java / Node.js `--help` similarity checks and an upstream request for the fuller CLI help contract
+- next: regenerate `skills/mikuproject/index.json` with `miku-indexgen` whenever its indexed Markdown or JSON files change
+- next: when upstream provides the help contract, update `references/runtime/help-compatibility.json`, runtime artifacts, and the upstream request status

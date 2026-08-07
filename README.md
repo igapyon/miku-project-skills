@@ -16,7 +16,7 @@ At the moment, the main skill in this repository is [`skills/mikuproject`](./ski
 
 Runtime requirement:
 
-- Node.js is required to build and run this skill
+- Node.js 20 or later is required to build and run this skill
 
 ## Quick Start
 
@@ -41,6 +41,7 @@ Typical things you can ask for:
 - The skill is designed as a workflow layer that can run as `Agent Skill over CLI backend` or `Agent Skill over MCP backend`, depending on the execution policy.
 - The MCP server adapter product is named `mikuproject-mcp`; MCP tools use `mikuproject_*` names such as `mikuproject_ai_spec`.
 - To use the MCP backend, see [`docs/mcp-backend-setup.md`](./docs/mcp-backend-setup.md).
+- [`skills/mikuproject/index.json`](./skills/mikuproject/index.json) is the generated discovery index included with the installable skill.
 - If you are evaluating or developing the repository itself, see the documents under [`docs/`](./docs/).
 
 Developer-oriented entry points:
@@ -71,7 +72,7 @@ This project is licensed under the Apache License 2.0. See [`LICENSE`](./LICENSE
 
 実行前提:
 
-- この skill の build と実行には Node.js が必要です
+- この skill の build と実行には Node.js 20 以降が必要です
 
 ## はじめかた
 
@@ -96,6 +97,7 @@ This project is licensed under the Apache License 2.0. See [`LICENSE`](./LICENSE
 - この skill は workflow layer として設計されており、実行 policy に応じて `Agent Skill over CLI backend` または `Agent Skill over MCP backend` として扱えます。
 - MCP server adapter の製品名は `mikuproject-mcp` で、MCP tool は `mikuproject_ai_spec` のような `mikuproject_*` 名を使います。
 - MCP backend を使う場合は [`docs/mcp-backend-setup.md`](./docs/mcp-backend-setup.md) を参照してください。
+- [`skills/mikuproject/index.json`](./skills/mikuproject/index.json) は、インストール用 skill に含める生成済みの discovery index です。
 - リポジトリ自体の評価や開発を行う場合は [`docs/`](./docs/) 以下の文書を参照してください。
 
 開発者向けの入口:

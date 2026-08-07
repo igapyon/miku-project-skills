@@ -1,6 +1,12 @@
 node_modules/
+.npm-cache/
+dist/
+bundle/
 coverage/
+*.log
+npm-debug.log*
 .DS_Store
 .vscode/mcp.json
-bundle/
-workplace/
+.codex/skills/
+workplace/*
+!workplace/.gitkeep

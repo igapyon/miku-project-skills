@@ -12,12 +12,27 @@
 - レポート出力: [report-export.md](./report-export.md)
 - MCP backend 利用設定: [mcp-backend-setup.md](./mcp-backend-setup.md)
 - backend switching 手動テスト: [backend-switching-manual-test.md](./backend-switching-manual-test.md)
-- miku software 共通 overview: [miku-soft-00-overview-design-v20260427.md](./miku-soft-00-overview-design-v20260427.md)
+- miku-soft 標準の適用と正本: [miku-soft-reference.md](./miku-soft-reference.md)
 - upstream MCP tool surface 連絡メモ: [upstream-mikuproject-mcp-tool-surface-note.md](./upstream-mikuproject-mcp-tool-surface-note.md)
 - upstream Java CLI 変更依頼（完了）: [upstream-mikuproject-java-cli-request.md](./upstream-mikuproject-java-cli-request.md)
 - upstream Java `ai export bundle` 追加依頼（完了）: [upstream-mikuproject-java-ai-export-bundle-request.md](./upstream-mikuproject-java-ai-export-bundle-request.md)
-- miku MCP server 共通設計: [miku-soft-50-mcp-design-v20260426.md](./miku-soft-50-mcp-design-v20260426.md)
+- upstream AI-era CLI help contract 依頼: [upstream-mikuproject-ai-era-cli-contract-request.md](./upstream-mikuproject-ai-era-cli-contract-request.md)
+- miku MCP server 共通設計の旧リンク: [miku-soft-50-mcp-design-v20260501.md](./miku-soft-50-mcp-design-v20260501.md)
 - 実装 TODO: [../TODO.md](../TODO.md)
+
+## Skill discovery index
+
+`skills/mikuproject/index.json` は、skill 内の Markdown と JSON を列挙する生成済みの
+discovery index です。Agent は詳細な reference を開く前にこれを読んで対象を絞ります。
+
+`SKILL.md`、references、config などの index 対象ファイルを変更したら、次で再生成します。
+
+```bash
+miku-indexgen --input-directory skills/mikuproject
+```
+
+生成された `index.json` は手編集しません。`npm test` と `npm run build:bundle` は、
+source と installable bundle の両方にこの index があることを検証します。
 
 ## upstream runtime artifact 運用
 
@@ -45,17 +60,20 @@ repo 直下の `workplace/` を使います。`workplace/` はローカル作業
 `mikuproject-skills` の package version は `package.json` と
 `package-lock.json` で管理します。
 
+Node.js 20 以降を対応対象とします。CI は Node.js 20 / 24 と Java 17 で
+`npm run build`（test と配布 ZIP build）を検証します。
+
 更新には `npm version` を使います。
 Git tag は別途作成するため、通常は `--no-git-tag-version` を付けます。
 
 例:
 
 ```bash
-npm version 0.8.1 --no-git-tag-version
+npm version 0.8.2 --no-git-tag-version
 ```
 
-`package.json` と `package-lock.json` では npm の SemVer として `0.8.1`
-のように記録します。Git tag やリリース名として `v0.8.1` を使う場合でも、
+`package.json` と `package-lock.json` では npm の SemVer として `0.8.2`
+のように記録します。Git tag やリリース名として `v0.8.2` を使う場合でも、
 package version には先頭の `v` を付けません。
 
 更新後は次で root package version が揃っていることを確認します。
@@ -142,6 +160,16 @@ runtime artifact のファイル名 version は、既定では Node.js runtime �
 ```bash
 MIKUPROJECT_RUNTIME_VERSION=0.8.3.3 npm run update:runtime
 ```
+
+## 配布と Release
+
+`npm run build` は test と installable ZIP build を行います。ZIP の内容は
+`tests/mikuproject-bundle-smoke.test.js` で検証し、`.DS_Store`、tests、docs、
+開発用 `workplace/` などを含めません。
+
+GitHub Release は人が release を publish するか、`workflow_dispatch` で tag を
+指定して起動します。`release-build.yml` は version 付き runtime artifact を検証して
+ZIP を添付します。通常の開発作業から公開を起動しません。
 
 ## Execution backend policy の保守方針
 

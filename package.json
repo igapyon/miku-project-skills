@@ -1,10 +1,13 @@
 {
   "name": "mikuproject-skills",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "private": true,
   "description": "Agent Skills for mikuproject",
   "license": "Apache-2.0",
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "npm test && npm run build:bundle:zip",
     "build:bundle": "node scripts/build-skill-bundle.mjs",

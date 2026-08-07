@@ -47,6 +47,8 @@ Use this index when you need detailed guidance beyond the core rules in `SKILL.m
   - preferred API surface
 - [runtime/upstream-map.md](runtime/upstream-map.md)
   - upstream file and API locations
+- [runtime/help-compatibility.json](runtime/help-compatibility.json)
+  - Java / Node.js `--help` similarity and documented differences
 
 ## Examples
 

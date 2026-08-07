@@ -6,7 +6,7 @@
 
 前提:
 
-- この skill の実行には Node.js が必要です
+- この skill の実行には Node.js 20 以降が必要です
 - Java runtime artifact を使う場合は Java も必要です
 - 配布 bundle には `mikuproject` CLI 実行用の runtime artifact が同梱されます
 

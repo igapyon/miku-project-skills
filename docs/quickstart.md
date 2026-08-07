@@ -28,10 +28,11 @@
 最短で試すなら、次の条件を満たします。
 
 1. このリポジトリ全体を workspace に置く
-2. `bundle/mikuproject-skills` を作って skill home に展開する
-3. `npm install`
-4. `npm test`
-5. Codex との会話で `mikuproject` skill を使う
+2. Node.js 20 以降と Java 17 を使えるようにする
+3. `bundle/mikuproject-skills` を作って skill home に展開する
+4. `npm install`
+5. `npm test`
+6. Codex との会話で `mikuproject` skill を使う
 
 ## Execution backend policy
 

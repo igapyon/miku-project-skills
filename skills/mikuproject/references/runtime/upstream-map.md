@@ -1,3 +1,19 @@
+---
+title: Mikuproject upstream runtime map
+description: Skill-local runtime artifacts and their upstream product boundaries.
+topics: [mikuproject, runtime, upstream]
+category: reference
+status: active
+audience: [agent, maintainer]
+updated: 2026-08-06
+sources:
+  - type: runtime-artifact
+    role: primary
+    path: skills/mikuproject/runtime/
+    version: 0.8.3.3
+    checked: 2026-08-06
+---
+
 # Upstream Runtime Map
 
 Use this reference when you need the exact `mikuproject` runtime locations behind the MVP workflow.
