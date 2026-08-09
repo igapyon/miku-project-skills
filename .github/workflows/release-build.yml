@@ -59,7 +59,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          package_version="$(node -p \"require('./package.json').version\")"
+          package_version="$(node -p "require('./package.json').version")"
           source_zip="bundle/miku-project-skills-${package_version}.zip"
           test -s "${source_zip}"
           target_zip="bundle/miku-project-skills-${{ github.event.inputs.tag_name || github.event.release.tag_name || github.ref_name }}.zip"
