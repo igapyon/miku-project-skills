@@ -1,0 +1,4 @@
+interface:
+  display_name: "miku-project"
+  short_description: "AI JSON workflow for miku-project WBS"
+  default_prompt: "Use $igapyon-miku-project for miku-project-specific WBS drafting, workbook exchange, patch application, and report exports."

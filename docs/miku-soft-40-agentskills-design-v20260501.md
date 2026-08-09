@@ -13,4 +13,4 @@ updated: 2026-08-06
 `igapyon-miku-soft-developer` skill を参照してください。
 
 この Skill の具体的な contract は [agent-skill-design.md](./agent-skill-design.md) と
-[`skills/mikuproject/SKILL.md`](../skills/mikuproject/SKILL.md) を正とします。
+[`skills/igapyon-miku-project/SKILL.md`](../skills/igapyon-miku-project/SKILL.md) を正とします。

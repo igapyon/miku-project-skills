@@ -1,11 +1,11 @@
 # Agent Skill Design
 
-`mikuproject-skills` の MVP 向け Agent Skill 設計メモです。
+`miku-project-skills` の MVP 向け Agent Skill 設計メモです。
 
 ## 方針
 
 MVP では、`spec` / `draft` / `patch` / `workbook` を別 skill に分割しない。
-まずは 1 つの `mikuproject` skill として成立させる。
+まずは 1 つの `miku-project` skill として成立させる。
 
 理由:
 
@@ -17,7 +17,7 @@ MVP では、`spec` / `draft` / `patch` / `workbook` を別 skill に分割し�
 
 Skill は次の 4 機能を担当する。
 
-- `mikuproject-ai-json-spec` を提示する
+- `miku-project-ai-json-spec` を提示する
 - 生成AIが返した `project_draft_view` を受け取って処理する
 - 生成AIが返した `Patch JSON` を受け取って処理する
 - 現在状態を `mikuproject_workbook_json` として生成AIに渡せる形にする
@@ -32,28 +32,28 @@ MVP の責務は、生成AIとの構造化 I/O を安定して往復させるこ
 
 第一候補:
 
-- `mikuproject`
+- `miku-project`
 
 候補理由:
 
 - upstream 名と一致していて理解しやすい
-- `mikuproject` 固有の JSON 仕様と往復フローを扱う skill であることが明確
+- `miku-project` 固有の JSON 仕様と往復フローを扱う skill であることが明確
 
 代替候補:
 
-- `mikuproject-wbs`
-- `mikuproject-ai-json`
+- `miku-project-wbs`
+- `miku-project-ai-json`
 
-MVP では `mikuproject` を採用する想定とする。
+MVP では `miku-project` を採用する想定とする。
 
 ## 想定する利用シーン
 
 ### 1. 新規 WBS 草案を作る
 
 - 利用者が要件や制約を文章で与える
-- Skill が `mikuproject-ai-json-spec` を提示する
+- Skill が `miku-project-ai-json-spec` を提示する
 - 生成AI が `project_draft_view` を返す
-- Skill がそれを受け取って `mikuproject` 形式の状態へ変換する
+- Skill がそれを受け取って `miku-project` 形式の状態へ変換する
 
 ### 2. 既存 WBS を AI に修正させる
 
@@ -68,7 +68,7 @@ MVP では `mikuproject` を採用する想定とする。
 MVP では、Agent Skill の会話境界における状態保持形式は
 `mikuproject_workbook_json` を優先する。
 
-ただし、これは `mikuproject` の内部基軸が `MS Project XML` であることを
+ただし、これは `miku-project` の内部基軸が `MS Project XML` であることを
 否定しない。Skill は会話と JSON 往復を扱う層なので、会話境界では
 `mikuproject_workbook_json` を主に保持し、内部処理では必要に応じて
 `ProjectModel` および `MS Project XML` へ変換する。
@@ -97,31 +97,31 @@ MVP では、Agent Skill の会話境界における状態保持形式は
 
 MVP では、次の upstream runtime artifact を主要入口とする。
 
-- `skills/mikuproject/runtime/mikuproject-<version>.jar`
-- `skills/mikuproject/runtime/mikuproject-<version>.mjs`
+- `skills/igapyon-miku-project/runtime/miku-project-<version>.jar`
+- `skills/igapyon-miku-project/runtime/miku-project-<version>.mjs`
 
 `<version>` は placeholder であり、実行時は `runtime/` 内の version 付き artifact を解決して使う。
 
 主に使う想定のコマンドは、生成AIに渡す例示で Java runtime が先に見えるように並べる。
 その後に Node.js runtime の例を示す。
 
-- `java -jar skills/mikuproject/runtime/mikuproject-<version>.jar ai spec`
-- `java -jar skills/mikuproject/runtime/mikuproject-<version>.jar state from-draft`
-- `java -jar skills/mikuproject/runtime/mikuproject-<version>.jar ai export project-overview`
-- `java -jar skills/mikuproject/runtime/mikuproject-<version>.jar ai export task-edit`
-- `java -jar skills/mikuproject/runtime/mikuproject-<version>.jar ai export phase-detail`
-- `java -jar skills/mikuproject/runtime/mikuproject-<version>.jar ai validate-patch`
-- `java -jar skills/mikuproject/runtime/mikuproject-<version>.jar state apply-patch`
-- `java -jar skills/mikuproject/runtime/mikuproject-<version>.jar export workbook-json`
-- `java -jar skills/mikuproject/runtime/mikuproject-<version>.jar report all`
-- `node skills/mikuproject/runtime/mikuproject-<version>.mjs ai spec`
-- `node skills/mikuproject/runtime/mikuproject-<version>.mjs state from-draft`
-- `node skills/mikuproject/runtime/mikuproject-<version>.mjs ai export project-overview`
-- `node skills/mikuproject/runtime/mikuproject-<version>.mjs ai export task-edit`
-- `node skills/mikuproject/runtime/mikuproject-<version>.mjs ai export phase-detail`
-- `node skills/mikuproject/runtime/mikuproject-<version>.mjs ai validate-patch`
-- `node skills/mikuproject/runtime/mikuproject-<version>.mjs state apply-patch`
-- `node skills/mikuproject/runtime/mikuproject-<version>.mjs state diff`
+- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar ai spec`
+- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar state from-draft`
+- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar ai export project-overview`
+- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar ai export task-edit`
+- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar ai export phase-detail`
+- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar ai validate-patch`
+- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar state apply-patch`
+- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar export workbook-json`
+- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar report all`
+- `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs ai spec`
+- `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs state from-draft`
+- `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs ai export project-overview`
+- `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs ai export task-edit`
+- `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs ai export phase-detail`
+- `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs ai validate-patch`
+- `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs state apply-patch`
+- `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs state diff`
 
 ## Execution Backend Policy
 
@@ -151,9 +151,9 @@ fallback が許可されていて実際に発生した場合は、どの backend
 
 例:
 
-- `mikuproject、mcp-only で要約して`
-- `mikuproject cli-only 固定で WBS XLSX を出して`
-- `mikuproject handoff-only として spec を出して`
+- `miku-project、mcp-only で要約して`
+- `miku-project cli-only 固定で WBS XLSX を出して`
+- `miku-project handoff-only として spec を出して`
 
 同一依頼内に複数の policy 値が出て、どれかが明確に否定されているわけではない場合は、
 実行前にどの policy を使うか確認する。`MCP でも使える?` のような backend 名だけの質問は
@@ -165,7 +165,7 @@ CLI backend を使う場合でも、Agent Skill の責務は CLI wrapper その�
 
 Agent Skill 側の責務:
 
-- `mikuproject` の activation boundary を守る
+- `miku-project` の activation boundary を守る
 - `spec` / `draft` / `patch` / `workbook` などの操作単位を選ぶ
 - `project_draft_view`、`Patch JSON`、`mikuproject_workbook_json` の artifact role を守る
 - Java CLI と Node.js CLI のどちらを使うかを runtime policy に従って決める
@@ -199,7 +199,7 @@ MCP backend 側の責務:
 - state や generated artifact を MCP resource として公開する
 - upstream runtime artifact または public API を呼び出す
 
-`mikuproject-skills` 側では、MCP tool 名や resource URI contract を勝手に再定義しない。
+`miku-project-skills` 側では、MCP tool 名や resource URI contract を勝手に再定義しない。
 MCP backend は `mikuproject-mcp` などの MCP server layer によって提供される前提とする。
 
 ### 現行 `mikuproject-mcp` contract との対応
@@ -260,7 +260,7 @@ MVP では、Skill の責務を 4 つの操作単位として定義する。
 
 出力:
 
-- `mikuproject-ai-json-spec` の本文
+- `miku-project-ai-json-spec` の本文
 - 必要なら version
 - 利用者が生成AIへ渡すための最小補足文
 
@@ -332,7 +332,7 @@ MVP の初期設計は handoff 型だった。
 その返却内容を利用者または上位エージェントが次の生成AIへ渡す形を意味する。
 
 たとえば `spec` では、skill 自身が外部の生成AIと自動対話するのではなく、
-次の AI ターンへ渡すための `mikuproject-ai-json-spec` を返す。
+次の AI ターンへ渡すための `miku-project-ai-json-spec` を返す。
 
 したがって、`spec` 実行時に spec 本文や handoff 用プロンプトが画面に表示されるのは、
 初期 handoff 設計では想定どおりの挙動だった。
@@ -374,7 +374,7 @@ MVP では後者までは扱わない。
 
 役割は次のように分ける。
 
-- `mikuproject` skill
+- `miku-project` skill
   - `spec` を返す
   - `project_draft_view` を `mikuproject_workbook_json` に変換する
   - `project_overview_view` / `task_edit_view` / `phase_detail_view` を返す
@@ -382,7 +382,7 @@ MVP では後者までは扱わない。
   - `Patch JSON` を base state に適用する
   - state diff を返す
   - workbook / xml / xlsx / report を入出力する
-- `mikuproject` CLI
+- `miku-project` CLI
   - `ai spec`
   - `ai export project-overview`
   - `ai export task-edit`
@@ -397,8 +397,8 @@ MVP では後者までは扱わない。
   - `export xlsx`
 - 上位エージェント
   - 利用者要求を受ける
-  - `mikuproject ai spec` の返却内容を内部で参照する
-  - `project_draft_view` や `Patch JSON` を内部で生成して `mikuproject` に渡す
+  - `miku-project ai spec` の返却内容を内部で参照する
+  - `project_draft_view` や `Patch JSON` を内部で生成して `miku-project` に渡す
   - 途中状態として `mikuproject_workbook_json` を保持する
 
 ### 最小の内部連携シーケンス
@@ -406,35 +406,35 @@ MVP では後者までは扱わない。
 新規草案では次の流れを想定する。
 
 1. 利用者が要件を入力する
-2. 上位エージェントが `mikuproject ai spec` を呼ぶ
+2. 上位エージェントが `miku-project ai spec` を呼ぶ
 3. 上位エージェントが `spec` と利用者要件をもとに `project_draft_view` を生成する
-4. 上位エージェントがその結果を `mikuproject state from-draft` に渡す
-5. `mikuproject` が `mikuproject_workbook_json` を返す
+4. 上位エージェントがその結果を `miku-project state from-draft` に渡す
+5. `miku-project` が `mikuproject_workbook_json` を返す
 6. 上位エージェントがその workbook state を次ターン用 state として保持する
 
 既存 WBS の修正では次の流れを想定する。
 
 1. 上位エージェントが現在の `mikuproject_workbook_json` を保持している
-2. 上位エージェントが `mikuproject ai export project-overview` で全体像を得る
-3. 必要に応じて `mikuproject ai export task-edit` または `mikuproject ai export phase-detail` で局所文脈を得る
+2. 上位エージェントが `miku-project ai export project-overview` で全体像を得る
+3. 必要に応じて `miku-project ai export task-edit` または `miku-project ai export phase-detail` で局所文脈を得る
 4. 上位エージェントがその局所文脈と変更要求をもとに `Patch JSON` を生成する
-5. 上位エージェントがその結果を `mikuproject ai validate-patch` に渡す
+5. 上位エージェントがその結果を `miku-project ai validate-patch` に渡す
 6. 上位エージェントが warning / error / change summary を確認する
-7. 上位エージェントがその結果を `mikuproject state apply-patch` に渡す
-8. 必要に応じて `mikuproject state diff` で差分確認する
-9. `mikuproject` が更新後の `mikuproject_workbook_json` を返す
+7. 上位エージェントがその結果を `miku-project state apply-patch` に渡す
+8. 必要に応じて `miku-project state diff` で差分確認する
+9. `miku-project` が更新後の `mikuproject_workbook_json` を返す
 10. 上位エージェントが更新後 state を保持する
 
 ### 必要な基盤機能
 
 agent-to-agent 型にするには、少なくとも次の基盤機能が必要になる。
 
-- `mikuproject` CLI の返却値を画面表示せず内部 state に回す制御
+- `miku-project` CLI の返却値を画面表示せず内部 state に回す制御
 - `mikuproject_workbook_json` の会話境界 state 保存
 - 失敗時の再試行または中断制御
 - `project_draft_view` / `Patch JSON` の生成失敗時にどこへ戻すかの制御
 
-現時点では `mikuproject` CLI の AI 編集系 first cut が揃っているため、
+現時点では `miku-project` CLI の AI 編集系 first cut が揃っているため、
 自動連携の初期スコープは `spec` / `project-overview` / `task-edit` / `phase-detail` /
 `validate-patch` / `apply-patch` / `state diff` / `workbook-json` / `xml` / `xlsx` に寄せるのが自然である。
 
@@ -490,7 +490,7 @@ soft error の場合は処理継続し、warning を返す。
 
 MVP では次は人手または別会話に委ねる。
 
-- `mikuproject` ブラウザ UI 上での目視確認
+- `miku-project` ブラウザ UI 上での目視確認
 - WBS 内容の業務妥当性判断
 - SVG / XLSX / Markdown の出力活用
 
@@ -500,7 +500,7 @@ MVP では次は人手または別会話に委ねる。
 
 ### 今の動き
 
-今の `mikuproject` skill は、次のように動く。
+今の `miku-project` skill は、次のように動く。
 
 1. `spec` を実行する
 2. skill が「次の AI に渡すための説明文」を返す
@@ -523,15 +523,15 @@ MVP では次は人手または別会話に委ねる。
 
 ### 何が足りないか
 
-足りないのは `mikuproject` skill 本体ではなく、
-「上位エージェントが内部で `mikuproject` を使う仕組み」である。
+足りないのは `miku-project` skill 本体ではなく、
+「上位エージェントが内部で `miku-project` を使う仕組み」である。
 
 ### 上位エージェントがやること
 
 上位エージェントは、次の順で動く。
 
 1. 利用者の依頼を受ける
-2. `mikuproject` から `spec` を受け取る
+2. `miku-project` から `spec` を受け取る
 3. その内容を画面に出さず内部で使う
 4. 既存修正では局所 projection を内部で取り出す
 5. `project_draft_view` や `Patch JSON` を内部で生成する
@@ -540,12 +540,12 @@ MVP では次は人手または別会話に委ねる。
 
 ### つまり何を作ればよいか
 
-次に必要なのは、`mikuproject` skill の大改造ではない。
+次に必要なのは、`miku-project` skill の大改造ではない。
 まず必要なのは次の仕組みである。
 
-- `mikuproject` の返り値を画面表示せず受け取る
+- `miku-project` の返り値を画面表示せず受け取る
 - `spec` や局所 projection をもとに内部で `project_draft_view` や `Patch JSON` を生成する
-- 生成した JSON をもう一度 `mikuproject` に戻す
+- 生成した JSON をもう一度 `miku-project` に戻す
 - `mikuproject_workbook_json` を途中状態として持ち回る
 
 ### 先に決めるべきこと

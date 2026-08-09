@@ -44,8 +44,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          java_runtime="$(find skills/mikuproject/runtime -maxdepth 1 -type f -name 'mikuproject-*.jar' ! -name '*-sources.jar' | sort -V | tail -n 1)"
-          node_runtime="$(find skills/mikuproject/runtime -maxdepth 1 -type f -name 'mikuproject-*.mjs' | sort -V | tail -n 1)"
+          java_runtime="$(find skills/igapyon-miku-project/runtime -maxdepth 1 -type f -name 'miku-project-*.jar' ! -name '*-sources.jar' | sort -V | tail -n 1)"
+          node_runtime="$(find skills/igapyon-miku-project/runtime -maxdepth 1 -type f -name 'miku-project-*.mjs' | sort -V | tail -n 1)"
           test -n "${java_runtime}"
           test -n "${node_runtime}"
           java -jar "${java_runtime}" --version >/dev/null
@@ -60,9 +60,9 @@ jobs:
         run: |
           set -euo pipefail
           package_version="$(node -p \"require('./package.json').version\")"
-          source_zip="bundle/igapyon-mikuproject-skills-${package_version}.zip"
+          source_zip="bundle/miku-project-skills-${package_version}.zip"
           test -s "${source_zip}"
-          target_zip="bundle/mikuproject-skills-${{ github.event.inputs.tag_name || github.event.release.tag_name || github.ref_name }}.zip"
+          target_zip="bundle/miku-project-skills-${{ github.event.inputs.tag_name || github.event.release.tag_name || github.ref_name }}.zip"
           cp "${source_zip}" "${target_zip}"
           echo "zip_path=${target_zip}" >> "$GITHUB_OUTPUT"
 

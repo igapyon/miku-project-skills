@@ -1,6 +1,6 @@
 # File Import and Export
 
-この文書は、`mikuproject-skills` における主要ファイル形式の import / export をまとめたものです。
+この文書は、`miku-project-skills` における主要ファイル形式の import / export をまとめたものです。
 
 対象:
 
@@ -45,7 +45,7 @@ AI 向け編集用 JSON 群は file workflow ではなく、projection / patch �
 
 ## 利用できる upstream runtime
 
-主要な入口は `skills/mikuproject/runtime/` の CLI runtime artifact です。
+主要な入口は `skills/igapyon-miku-project/runtime/` の CLI runtime artifact です。
 生成AI向けの例では、Java runtime の例を先に示し、続けて Node.js runtime の例を示します。
 
 ### `MS Project XML`

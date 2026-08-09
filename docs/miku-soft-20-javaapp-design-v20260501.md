@@ -13,5 +13,5 @@ updated: 2026-08-06
 `igapyon-miku-soft-developer` skill を参照してください。
 
 Java runtime の製品固有の対応範囲は
-[`skills/mikuproject/references/runtime/upstream-map.md`](../skills/mikuproject/references/runtime/upstream-map.md)
+[`skills/igapyon-miku-project/references/runtime/upstream-map.md`](../skills/igapyon-miku-project/references/runtime/upstream-map.md)
 に記録しています。

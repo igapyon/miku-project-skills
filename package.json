@@ -1,8 +1,8 @@
 {
-  "name": "mikuproject-skills",
+  "name": "miku-project-skills",
   "version": "0.8.2",
   "private": true,
-  "description": "Agent Skills for mikuproject",
+  "description": "Agent Skills for miku-project",
   "license": "Apache-2.0",
   "type": "module",
   "engines": {
@@ -13,7 +13,7 @@
     "build:bundle": "node scripts/build-skill-bundle.mjs",
     "build:bundle:zip": "npm run build:bundle && node scripts/build-skill-bundle-zip.mjs",
     "build:full": "npm run build",
-    "update:runtime": "sh scripts/update-mikuproject-runtime.sh",
+    "update:runtime": "sh scripts/update-miku-project-runtime.sh",
     "test": "vitest run",
     "test:watch": "vitest"
   },

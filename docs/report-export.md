@@ -1,6 +1,6 @@
 # Report Export
 
-この文書は、`mikuproject-skills` における report / presentation 向け出力をまとめたものです。
+この文書は、`miku-project-skills` における report / presentation 向け出力をまとめたものです。
 
 対象:
 
@@ -31,7 +31,7 @@
 
 ## 利用できる upstream runtime
 
-主要な入口は `skills/mikuproject/runtime/` の CLI runtime artifact です。
+主要な入口は `skills/igapyon-miku-project/runtime/` の CLI runtime artifact です。
 生成AI向けの例では、Java runtime の例を先に示し、続けて Node.js runtime の例を示します。
 
 - Java runtime: `report all`, `report dir`, `report wbs-xlsx`, `report daily-svg`, `report weekly-svg`, `report monthly-calendar-svg`, `report wbs-markdown`, `report mermaid`

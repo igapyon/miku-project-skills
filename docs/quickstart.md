@@ -1,6 +1,6 @@
 # Quickstart
 
-この文書は、`mikuproject-skills` をいま動く範囲で試すための最短手順です。
+この文書は、`miku-project-skills` をいま動く範囲で試すための最短手順です。
 
 対象:
 
@@ -10,8 +10,8 @@
 - `workbook`
 - `project-overview` / `task-edit` / `phase-detail`
 - `validate` / `apply` / `diff`
-- `mikuproject` CLI の `workbook-json` / `xml` / `xlsx`
-- `mikuproject` CLI の `wbs-xlsx` / `daily-svg` / `weekly-svg` / `monthly-calendar-svg` / `wbs-markdown` / `mermaid`
+- `miku-project` CLI の `workbook-json` / `xml` / `xlsx`
+- `miku-project` CLI の `wbs-xlsx` / `daily-svg` / `weekly-svg` / `monthly-calendar-svg` / `wbs-markdown` / `mermaid`
 
 この時点で向いている相手:
 
@@ -29,10 +29,10 @@
 
 1. このリポジトリ全体を workspace に置く
 2. Node.js 20 以降と Java 17 を使えるようにする
-3. `bundle/mikuproject-skills` を作って skill home に展開する
+3. `bundle/miku-project-skills` を作って skill home に展開する
 4. `npm install`
 5. `npm test`
-6. Codex との会話で `mikuproject` skill を使う
+6. Codex との会話で `miku-project` skill を使う
 
 ## Execution backend policy
 
@@ -40,7 +40,7 @@
 
 これは、まず同梱 CLI backend を使い、CLI が使えない場合だけ、許可されていれば MCP backend へ fallback する方針です。
 
-skill bundle には `skills/mikuproject/config/backend-policy.json` が含まれます。
+skill bundle には `skills/igapyon-miku-project/config/backend-policy.json` が含まれます。
 このファイルは skill 側の既定 policy と許可値を記録するためのものです。
 ユーザーの明示指示と実行環境 policy が優先で、設定ファイルはそれらより下位です。
 
@@ -56,7 +56,7 @@ skill bundle には `skills/mikuproject/config/backend-policy.json` が含まれ
 選んだ backend が使えない場合、別 backend へ自動 fallback せず、実行経路エラーとして扱います。
 
 MCP backend を使う場合の server product 名は `mikuproject-mcp` です。
-MCP client 設定上の server key は短く `mikuproject` としてよいですが、repo / package / server adapter の名称は `mikuproject-mcp` として扱います。
+MCP client 設定上の server key は短く `miku-project` としてよいですが、repo / package / server adapter の名称は `mikuproject-mcp` として扱います。
 
 現行 `mikuproject-mcp` の tool 名は `mikuproject_ai_spec`、`mikuproject_state_from_draft`、`mikuproject_state_apply_patch` のようなアンダースコア区切りです。
 resource URI は `mikuproject://state/current`、`mikuproject://summary/{operationId}` などを使います。
@@ -64,11 +64,11 @@ resource URI は `mikuproject://state/current`、`mikuproject://summary/{operati
 会話で明示する場合は、依頼に含めます。
 
 ```text
-mikuproject、mcp-only でこの workbook を要約して
+miku-project、mcp-only でこの workbook を要約して
 ```
 
 ```text
-mikuproject、cli-only で WBS XLSX を出力して
+miku-project、cli-only で WBS XLSX を出力して
 ```
 
 ## 事前準備
@@ -79,12 +79,12 @@ mikuproject、cli-only で WBS XLSX を出力して
 
 必要なのは次です。
 
-- `skills/mikuproject`
-- `skills/mikuproject/runtime/mikuproject-<version>.jar`
-- `skills/mikuproject/runtime/mikuproject-<version>.mjs`
+- `skills/igapyon-miku-project`
+- `skills/igapyon-miku-project/runtime/miku-project-<version>.jar`
+- `skills/igapyon-miku-project/runtime/miku-project-<version>.mjs`
 
 ここでの `<version>` は同梱 runtime の version です。
-実行時は `skills/mikuproject/runtime/` 内の version 付き artifact を解決して使います。
+実行時は `skills/igapyon-miku-project/runtime/` 内の version 付き artifact を解決して使います。
 
 `skills/` だけでは不足します。
 
@@ -99,12 +99,12 @@ npm run build:bundle
 これで次が作られます。
 
 ```text
-bundle/mikuproject-skills/
+bundle/miku-project-skills/
   skills/
-    mikuproject/
+    miku-project/
       runtime/
-        mikuproject-<version>.jar
-        mikuproject-<version>.mjs
+        miku-project-<version>.jar
+        miku-project-<version>.mjs
 ```
 
 その中身を skill home にコピーします。
@@ -118,7 +118,7 @@ npm run build:bundle:zip
 生成先:
 
 ```text
-bundle/igapyon-mikuproject-skills-<version>.zip
+bundle/miku-project-skills-<version>.zip
 ```
 
 詳しくは [skill-installation.md](./skill-installation.md) を参照してください。
@@ -151,7 +151,7 @@ WBS 関連の生成物は、workspace ルートへ直置きせず、専用ディ
 推奨構成:
 
 ```text
-mikuproject/
+miku-project/
   state/
   report/
   tmp/
@@ -159,9 +159,9 @@ mikuproject/
 
 使い分け:
 
-- `mikuproject/state/`: workbook JSON、draft JSON、Patch JSON などの状態ファイル
-- `mikuproject/report/`: `WBS XLSX`、`SVG`、`Markdown`、Mermaid などの成果物
-- `mikuproject/tmp/`: 一時ファイル
+- `miku-project/state/`: workbook JSON、draft JSON、Patch JSON などの状態ファイル
+- `miku-project/report/`: `WBS XLSX`、`SVG`、`Markdown`、Mermaid などの成果物
+- `miku-project/tmp/`: 一時ファイル
 
 ファイル名は、同じ実行単位で同じ prefix を使うと整理しやすくなります。
 
@@ -198,7 +198,7 @@ mikuproject/
 会話では、まず明示トリガー付きの依頼文で始めます。
 
 ```text
-mikuproject で、れでえいやあでWBSつくって
+miku-project で、れでえいやあでWBSつくって
 ```
 
 または:
@@ -211,14 +211,14 @@ miku project で、れでえいやあでWBSつくって
 
 - エージェントが内部で `spec` を参照する
 - エージェントが内部で `project_draft_view` を作る
-- それを `mikuproject` に内部で取り込み、workbook state まで進める
+- それを `miku-project` に内部で取り込み、workbook state まで進める
 - ユーザーには WBS 要約や完成結果だけが返る
 
 避けたい挙動:
 
 - `spec` 本文がそのまま画面に出る
 - `project_draft_view` の JSON がそのまま画面に出る
-- `以下を mikuproject に渡せます` のような visible handoff で止まる
+- `以下を miku-project に渡せます` のような visible handoff で止まる
 - `task_edit_view` や `.editjson` の説明へ逸れる
 
 このような表示が出る場合は、fallback 動作になっている可能性があります。
@@ -226,7 +226,7 @@ miku project で、れでえいやあでWBSつくって
 補足:
 
 - この skill は generic な planning 語だけでは自動起動しない
-- まず `mikuproject` または `miku project` を入れて始める
+- まず `miku-project` または `miku project` を入れて始める
 
 ### 2. 明示的に spec を見たい場合だけ出す
 
@@ -238,7 +238,7 @@ spec を出して
 
 期待すること:
 
-- `mikuproject-ai-json-spec` が返る
+- `miku-project-ai-json-spec` が返る
 - これは通常運用ではなく、raw spec を確認したいときの操作
 
 ### 3. すでにある `project_draft_view` を取り込む
@@ -265,9 +265,9 @@ spec を出して
 
 - エージェントが必要に応じて `project_overview_view` / `task_edit_view` / `phase_detail_view` を内部で使う
 - エージェントが内部で `Patch JSON` を作る
-- それを `mikuproject ai validate-patch` で検査する
-- それを `mikuproject` に内部で適用する
-- 必要に応じて `mikuproject state diff` で変更点を確認する
+- それを `miku-project ai validate-patch` で検査する
+- それを `miku-project` に内部で適用する
+- 必要に応じて `miku-project state diff` で変更点を確認する
 - ユーザーには更新後の内容だけを返す
 
 外部で作った `Patch JSON` を適用するときは、次のように依頼します。
@@ -294,7 +294,7 @@ spec を出して
 
 ### 6. Markdown / Mermaid / Excel ガントに変換する
 
-export を頼むときは、補助スクリプトを作るのではなく、`mikuproject` の正式 export を使うのが期待動作です。
+export を頼むときは、補助スクリプトを作るのではなく、`miku-project` の正式 export を使うのが期待動作です。
 
 例:
 
@@ -320,33 +320,33 @@ Excelガントが欲しい
 - 通常運用では `tmp/*.mjs` のような補助スクリプトを作らない
 - 依存不足で export できない場合だけ、その不足を短く報告する
 
-## `mikuproject` CLI でできること
+## `miku-project` CLI でできること
 
-bundle 配布物では `skills/mikuproject` 配下に runtime artifact が入ります。
-通常の参照元は bundle 内の `skills/mikuproject/runtime/mikuproject-<version>.jar` と
-`skills/mikuproject/runtime/mikuproject-<version>.mjs` です。
+bundle 配布物では `skills/igapyon-miku-project` 配下に runtime artifact が入ります。
+通常の参照元は bundle 内の `skills/igapyon-miku-project/runtime/miku-project-<version>.jar` と
+`skills/igapyon-miku-project/runtime/miku-project-<version>.mjs` です。
 `<version>` をそのまま入力するのではなく、同梱されている実ファイル名を使います。
 
 ```text
-mikuproject ai spec
-mikuproject ai export project-overview
-mikuproject ai export task-edit
-mikuproject ai export phase-detail
-mikuproject ai validate-patch
-mikuproject state from-draft
-mikuproject state summarize
-mikuproject state diff
-mikuproject state apply-patch
-mikuproject export workbook-json
-mikuproject export xml
-mikuproject export xlsx
-mikuproject report wbs-xlsx
-mikuproject report daily-svg
-mikuproject report weekly-svg
-mikuproject report monthly-calendar-svg
-mikuproject report all
-mikuproject report wbs-markdown
-mikuproject report mermaid
+miku-project ai spec
+miku-project ai export project-overview
+miku-project ai export task-edit
+miku-project ai export phase-detail
+miku-project ai validate-patch
+miku-project state from-draft
+miku-project state summarize
+miku-project state diff
+miku-project state apply-patch
+miku-project export workbook-json
+miku-project export xml
+miku-project export xlsx
+miku-project report wbs-xlsx
+miku-project report daily-svg
+miku-project report weekly-svg
+miku-project report monthly-calendar-svg
+miku-project report all
+miku-project report wbs-markdown
+miku-project report mermaid
 ```
 
 この CLI は、上位エージェントが内部で使う前提で考えます。
