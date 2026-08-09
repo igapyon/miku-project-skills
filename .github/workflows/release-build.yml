@@ -44,7 +44,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          java_runtime="$(find skills/igapyon-miku-project/runtime -maxdepth 1 -type f -name 'miku-project-*.jar' ! -name '*-sources.jar' | sort -V | tail -n 1)"
+          java_runtime="$(find skills/igapyon-miku-project/runtime -maxdepth 1 -type f -name 'miku-project-*.jar' ! -name 'miku-project-sources-*.jar' | sort -V | tail -n 1)"
           node_runtime="$(find skills/igapyon-miku-project/runtime -maxdepth 1 -type f -name 'miku-project-*.mjs' | sort -V | tail -n 1)"
           test -n "${java_runtime}"
           test -n "${node_runtime}"
