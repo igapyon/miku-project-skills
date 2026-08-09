@@ -1,6 +1,6 @@
 # Development Notes
 
-この文書は `mikuproject-skills` の開発者向けメモです。
+この文書は `miku-project-skills` の開発者向けメモです。
 
 ## 文書の場所
 
@@ -14,21 +14,21 @@
 - backend switching 手動テスト: [backend-switching-manual-test.md](./backend-switching-manual-test.md)
 - miku-soft 標準の適用と正本: [miku-soft-reference.md](./miku-soft-reference.md)
 - upstream MCP tool surface 連絡メモ: [upstream-mikuproject-mcp-tool-surface-note.md](./upstream-mikuproject-mcp-tool-surface-note.md)
-- upstream Java CLI 変更依頼（完了）: [upstream-mikuproject-java-cli-request.md](./upstream-mikuproject-java-cli-request.md)
-- upstream Java `ai export bundle` 追加依頼（完了）: [upstream-mikuproject-java-ai-export-bundle-request.md](./upstream-mikuproject-java-ai-export-bundle-request.md)
-- upstream AI-era CLI help contract 依頼: [upstream-mikuproject-ai-era-cli-contract-request.md](./upstream-mikuproject-ai-era-cli-contract-request.md)
+- upstream Java CLI 変更依頼（完了）: [upstream-miku-project-java-cli-request.md](./upstream-miku-project-java-cli-request.md)
+- upstream Java `ai export bundle` 追加依頼（完了）: [upstream-miku-project-java-ai-export-bundle-request.md](./upstream-miku-project-java-ai-export-bundle-request.md)
+- upstream AI-era CLI help contract 依頼: [upstream-miku-project-ai-era-cli-contract-request.md](./upstream-miku-project-ai-era-cli-contract-request.md)
 - miku MCP server 共通設計の旧リンク: [miku-soft-50-mcp-design-v20260501.md](./miku-soft-50-mcp-design-v20260501.md)
 - 実装 TODO: [../TODO.md](../TODO.md)
 
 ## Skill discovery index
 
-`skills/mikuproject/index.json` は、skill 内の Markdown と JSON を列挙する生成済みの
+`skills/igapyon-miku-project/index.json` は、skill 内の Markdown と JSON を列挙する生成済みの
 discovery index です。Agent は詳細な reference を開く前にこれを読んで対象を絞ります。
 
 `SKILL.md`、references、config などの index 対象ファイルを変更したら、次で再生成します。
 
 ```bash
-miku-indexgen --input-directory skills/mikuproject
+miku-indexgen --input-directory skills/igapyon-miku-project
 ```
 
 生成された `index.json` は手編集しません。`npm test` と `npm run build:bundle` は、
@@ -36,19 +36,19 @@ source と installable bundle の両方にこの index があることを検証�
 
 ## upstream runtime artifact 運用
 
-`mikuproject-skills` は、通常の skill 実行時に upstream source tree を直接使わず、
-`skills/mikuproject/runtime/` に置いた runtime artifact を使います。
+`miku-project-skills` は、通常の skill 実行時に upstream source tree を直接使わず、
+`skills/igapyon-miku-project/runtime/` に置いた runtime artifact を使います。
 
 現在の必須 runtime artifact:
 
-- `skills/mikuproject/runtime/mikuproject-<version>.jar`
-- `skills/mikuproject/runtime/mikuproject-sources-<version>.jar`
-- `skills/mikuproject/runtime/mikuproject-<version>.mjs`
-- `skills/mikuproject/runtime/mikuproject-sources-<version>.tgz`
+- `skills/igapyon-miku-project/runtime/miku-project-<version>.jar`
+- `skills/igapyon-miku-project/runtime/miku-project-sources-<version>.jar`
+- `skills/igapyon-miku-project/runtime/miku-project-<version>.mjs`
+- `skills/igapyon-miku-project/runtime/miku-project-sources-<version>.tgz`
 
 更新時は upstream 側で artifact を生成して、該当する runtime artifact を差し替えます。
-Java runtime 更新時は `mikuproject-<version>.jar` と `mikuproject-sources-<version>.jar` を差し替えます。
-Node.js runtime 更新時は `mikuproject-<version>.mjs` と `mikuproject-sources-<version>.tgz` を差し替えます。
+Java runtime 更新時は `miku-project-<version>.jar` と `miku-project-sources-<version>.jar` を差し替えます。
+Node.js runtime 更新時は `miku-project-<version>.mjs` と `miku-project-sources-<version>.tgz` を差し替えます。
 upstream source tree をこのリポジトリに同期する運用は通常不要です。
 
 このリポジトリで一時的に upstream を取得して artifact を更新する場合は、
@@ -57,7 +57,7 @@ repo 直下の `workplace/` を使います。`workplace/` はローカル作業
 
 ## バージョン更新
 
-`mikuproject-skills` の package version は `package.json` と
+`miku-project-skills` の package version は `package.json` と
 `package-lock.json` で管理します。
 
 Node.js 20 以降を対応対象とします。CI は Node.js 20 / 24 と Java 17 で
@@ -82,23 +82,23 @@ package version には先頭の `v` を付けません。
 node -e 'const p=require("./package.json"); const l=require("./package-lock.json"); console.log({package:p.version, lock:l.version, root:l.packages[""].version})'
 ```
 
-同梱 CLI runtime の version は `mikuproject-skills` の package version とは別です。
+同梱 CLI runtime の version は `miku-project-skills` の package version とは別です。
 runtime artifact を差し替えた場合、または release note で runtime version を書く場合は、
 次で確認します。
 
 ```bash
-java -jar skills/mikuproject/runtime/mikuproject-<version>.jar --version
-node skills/mikuproject/runtime/mikuproject-<version>.mjs --version
+java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar --version
+node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs --version
 ```
 
 ## 生成物の配置方針
 
-WBS 関連の生成物は、workspace ルートへ散らさず、`mikuproject/` 配下へ寄せる方針を推奨します。
+WBS 関連の生成物は、workspace ルートへ散らさず、`miku-project/` 配下へ寄せる方針を推奨します。
 
 推奨構成:
 
 ```text
-mikuproject/
+miku-project/
   state/
   report/
   tmp/
@@ -106,9 +106,9 @@ mikuproject/
 
 使い分け:
 
-- `mikuproject/state/`: `mikuproject_workbook_json`、`project_draft_view`、`Patch JSON` などの状態ファイル
-- `mikuproject/report/`: `WBS XLSX`、`daily/weekly/monthly SVG`、`WBS Markdown`、Mermaid などの成果物
-- `mikuproject/tmp/`: 一時ファイル
+- `miku-project/state/`: `mikuproject_workbook_json`、`project_draft_view`、`Patch JSON` などの状態ファイル
+- `miku-project/report/`: `WBS XLSX`、`daily/weekly/monthly SVG`、`WBS Markdown`、Mermaid などの成果物
+- `miku-project/tmp/`: 一時ファイル
 
 ファイル名は `YYYYMMDDHHmm-` の時系列 prefix を推奨します。
 同じ実行で出た複数成果物には、同一 prefix を使う前提で運用します。
@@ -128,24 +128,24 @@ npm run update:runtime
 ```
 
 フルビルドや runtime artifact 更新を行う前には、`workplace/upstream/` 以下の
-`mikuproject` と `mikuproject-java` について、最新 clone または pull が必要かを確認します。
+`miku-project` と `miku-project-java` について、最新 clone または pull が必要かを確認します。
 未取得または古い可能性がある場合は、先に upstream を更新してから artifact 生成と bundle build を行います。
 
 このコマンドは次を行います。
 
-- `workplace/upstream/mikuproject` に `mikuproject` を clone または更新する
-- `workplace/upstream/mikuproject-java` に `mikuproject-java` を clone または更新する
-- Node.js 側で `bundle/mikuproject.mjs` を生成する
-- Node.js 側で `bundle/mikuproject-sources.tgz` を生成する
-- Java 側で `target/mikuproject.jar` を生成する
-- Java 側で `target/mikuproject-sources.jar` を生成する
-- 生成物を version 付き名で `skills/mikuproject/runtime/` にコピーする
-- コピー後の `mikuproject-<version>.jar` と `mikuproject-<version>.mjs` を smoke test する
+- `workplace/upstream/miku-project` に `miku-project` を clone または更新する
+- `workplace/upstream/miku-project-java` に `miku-project-java` を clone または更新する
+- Node.js 側で `bundle/miku-project.mjs` を生成する
+- Node.js 側で `bundle/miku-project-sources.tgz` を生成する
+- Java 側で `target/miku-project.jar` を生成する
+- Java 側で `target/miku-project-sources.jar` を生成する
+- 生成物を version 付き名で `skills/igapyon-miku-project/runtime/` にコピーする
+- コピー後の `miku-project-<version>.jar` と `miku-project-<version>.mjs` を smoke test する
 
 既定の取得元と ref:
 
-- `mikuproject`: `https://github.com/igapyon/mikuproject.git` の `devel`
-- `mikuproject-java`: `https://github.com/igapyon/mikuproject-java.git` の `devel`
+- `miku-project`: `https://github.com/igapyon/miku-project.git` の `devel`
+- `miku-project-java`: `https://github.com/igapyon/miku-project-java.git` の `devel`
 
 必要に応じて環境変数で変更できます。
 
@@ -164,7 +164,7 @@ MIKUPROJECT_RUNTIME_VERSION=0.8.3.3 npm run update:runtime
 ## 配布と Release
 
 `npm run build` は test と installable ZIP build を行います。ZIP の内容は
-`tests/mikuproject-bundle-smoke.test.js` で検証し、`.DS_Store`、tests、docs、
+`tests/miku-project-bundle-smoke.test.js` で検証し、`.DS_Store`、tests、docs、
 開発用 `workplace/` などを含めません。
 
 GitHub Release は人が release を publish するか、`workflow_dispatch` で tag を
@@ -173,7 +173,7 @@ ZIP を添付します。通常の開発作業から公開を起動しません�
 
 ## Execution backend policy の保守方針
 
-`mikuproject-skills` は Agent Skill workflow layer として保守します。
+`miku-project-skills` は Agent Skill workflow layer として保守します。
 実行面は backend policy によって CLI backend、MCP backend、handoff backend を選べるようにします。
 
 既定値:
@@ -182,20 +182,20 @@ ZIP を添付します。通常の開発作業から公開を起動しません�
 
 skill-local 設定:
 
-- `skills/mikuproject/config/backend-policy.json`
+- `skills/igapyon-miku-project/config/backend-policy.json`
 - bundle に同梱し、既定 policy、許可 policy、strict policy、fallback 可否を機械可読に記録する
 - 優先順位は `user-request`、`environment-policy`、`skill-config`、`repository-default`
 - ユーザー明示指示や実行環境 policy と衝突する場合、設定ファイル側を優先しない
 
 policy selector:
 
-- `skills/mikuproject/lib/backend-policy.mjs`
+- `skills/igapyon-miku-project/lib/backend-policy.mjs`
 - CLI や MCP を実行せず、policy と operation capability から実行 backend の候補を決める純粋 helper として扱う
 - 実際の backend runner が追加される場合も、この helper の strict policy / fallback contract を崩さない
 
 backend operation registry:
 
-- `skills/mikuproject/lib/backend-operations.mjs`
+- `skills/igapyon-miku-project/lib/backend-operations.mjs`
 - Agent Skill operation から CLI invocation と MCP tool 名を引くための小さな registry として扱う
 - CLI invocation builder は command / args を返すだけで、CLI process は実行しない
 - MCP tool 名が `null` の operation は、現行 MCP backend では未対応として扱う
@@ -297,7 +297,7 @@ upstream 側 test は upstream 各リポジトリで実行します。
 このリポジトリでは、受け取った runtime artifact の存在と CLI contract を smoke test で確認します。
 
 - このリポジトリで重視するのは、skill 側の動作確認と最低限の smoke test
-- upstream `mikuproject` 自体の詳細な検証は、まず upstream 側で行われる前提とする
+- upstream `miku-project` 自体の詳細な検証は、まず upstream 側で行われる前提とする
 - runtime artifact を差し替えた場合は `npm test` と `npm run build:bundle` を実行する
 
 ## 既知メモ: upstream CLI 速度
@@ -312,6 +312,6 @@ upstream 側の CLI runtime artifact は、軽い処理でも CLI を毎回起�
 
 ## 現在の MVP の前提
 
-- skill は `skills/mikuproject` にある
+- skill は `skills/igapyon-miku-project` にある
 - 会話境界の state は `mikuproject_workbook_json`
 - upstream の Java CLI runtime artifact と Node.js CLI runtime artifact を前提にしている

@@ -1,24 +1,24 @@
 # MCP Backend Setup
 
-この文書は、`mikuproject-skills` から MCP backend を使うための最小設定メモです。
+この文書は、`miku-project-skills` から MCP backend を使うための最小設定メモです。
 
-`mikuproject-skills` は MCP server 本体を標準同梱しません。
+`miku-project-skills` は MCP server 本体を標準同梱しません。
 MCP backend を使う場合は、別配布の `mikuproject-mcp` を MCP client から起動します。
 
 ## 位置づけ
 
-- `mikuproject-skills`: Agent Skill の workflow layer
+- `miku-project-skills`: Agent Skill の workflow layer
 - `mikuproject-mcp`: MCP server adapter
-- `mikuproject-mcp` の server key は、MCP client 設定では短く `mikuproject` として構いません
+- `mikuproject-mcp` の server key は、MCP client 設定では短く `miku-project` として構いません
 - MCP tool 名は `mikuproject_ai_spec` のような `mikuproject_*` 形式です
 
-`mikuproject-skills` 側の既定 backend policy は `cli-preferred` です。
+`miku-project-skills` 側の既定 backend policy は `cli-preferred` です。
 MCP backend を明示したい場合は、会話で `mcp-only` または `mcp-preferred` を指定します。
 
 例:
 
 ```text
-mikuproject、mcp-only で AI spec を確認して
+miku-project、mcp-only で AI spec を確認して
 ```
 
 ## VS Code 設定例
@@ -30,7 +30,7 @@ VS Code で使う場合は、workspace の `.vscode/mcp.json` に MCP server 設
 ```json
 {
   "servers": {
-    "mikuproject": {
+    "miku-project": {
       "type": "stdio",
       "command": "npm",
       "args": [
@@ -84,7 +84,7 @@ VS Code の `.vscode/mcp.json` 例:
 ```json
 {
   "servers": {
-    "mikuproject": {
+    "miku-project": {
       "type": "http",
       "url": "http://127.0.0.1:3000/mcp"
     }

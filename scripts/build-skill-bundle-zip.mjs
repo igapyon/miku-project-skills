@@ -9,17 +9,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, "..");
 const bundleParentRoot = path.resolve(repoRoot, "bundle");
-const bundleDirName = "mikuproject-skills";
+const bundleDirName = "miku-project-skills";
 const bundleRoot = path.resolve(bundleParentRoot, bundleDirName);
 const packageJson = JSON.parse(fs.readFileSync(path.resolve(repoRoot, "package.json"), "utf8"));
-const zipFileName = `igapyon-${packageJson.name}-${packageJson.version}.zip`;
+const zipFileName = `${packageJson.name}-${packageJson.version}.zip`;
 const zipPath = path.resolve(bundleParentRoot, zipFileName);
 
 main();
 
 function main() {
   if (!fs.existsSync(bundleRoot)) {
-    throw new Error("missing bundle/mikuproject-skills. run build:bundle first.");
+    throw new Error("missing bundle/miku-project-skills. run build:bundle first.");
   }
 
   fs.rmSync(zipPath, { force: true });

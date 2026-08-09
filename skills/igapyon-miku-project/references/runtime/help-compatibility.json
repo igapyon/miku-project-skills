@@ -1,0 +1,30 @@
+{
+  "format": "miku-project-runtime-help-compatibility",
+  "version": 1,
+  "nodeArtifactVersion": "0.12.0",
+  "javaArtifactVersion": "0.12.0",
+  "comparison": "documented-similarity",
+  "sharedFragments": [
+    "--version",
+    "ai spec",
+    "ai detect-kind",
+    "ai export project-overview",
+    "state from-draft",
+    "state apply-patch",
+    "state diff",
+    "export workbook-json",
+    "report all",
+    "report mermaid"
+  ],
+  "javaOnlyFragments": [
+    "state validate --in workbook.json",
+    "state import --in workbook.json",
+    "state merge --state workbook.json",
+    "validate xml --in project.xml"
+  ],
+  "nodeOnlyFragments": [],
+  "knownLimitations": [
+    "Node.js and Java runtimes are both pinned to their separately published v0.12.0 Releases.",
+    "The legacy `mikuproject_*` MCP identifiers are not a CLI runtime identifier and remain a documented compatibility contract."
+  ]
+}

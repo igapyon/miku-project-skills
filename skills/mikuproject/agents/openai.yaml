@@ -1,4 +1,0 @@
-interface:
-  display_name: "mikuproject"
-  short_description: "AI JSON workflow for mikuproject WBS"
-  default_prompt: "Use $mikuproject for mikuproject-specific WBS drafting, workbook exchange, patch application, and report exports."

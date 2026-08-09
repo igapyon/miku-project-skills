@@ -3,23 +3,23 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { resolveRuntimeArtifact } from "../skills/mikuproject/lib/runtime-artifacts.mjs";
+import { resolveRuntimeArtifact } from "../skills/igapyon-miku-project/lib/runtime-artifacts.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, "..");
 
-const bundleRoot = path.resolve(repoRoot, "bundle/mikuproject-skills");
+const bundleRoot = path.resolve(repoRoot, "bundle/miku-project-skills");
 const bundleSkillsRoot = path.resolve(bundleRoot, "skills");
-const sourceSkillRoot = path.resolve(repoRoot, "skills/mikuproject");
+const sourceSkillRoot = path.resolve(repoRoot, "skills/igapyon-miku-project");
 const sourceRuntimeRoot = path.resolve(sourceSkillRoot, "runtime");
 
 main();
 
 function main() {
-  ensureSourceExists(sourceSkillRoot, "skills/mikuproject");
-  ensureSourceExists(path.resolve(sourceSkillRoot, "index.json"), "skills/mikuproject/index.json");
-  ensureSourceExists(sourceRuntimeRoot, "skills/mikuproject/runtime");
+  ensureSourceExists(sourceSkillRoot, "skills/igapyon-miku-project");
+  ensureSourceExists(path.resolve(sourceSkillRoot, "index.json"), "skills/igapyon-miku-project/index.json");
+  ensureSourceExists(sourceRuntimeRoot, "skills/igapyon-miku-project/runtime");
   const javaRuntime = resolveRequiredArtifact("java");
   const javaSources = resolveRequiredArtifact("java-sources");
   const nodeRuntime = resolveRequiredArtifact("node");
@@ -28,21 +28,21 @@ function main() {
   fs.rmSync(bundleRoot, { recursive: true, force: true });
   fs.mkdirSync(bundleSkillsRoot, { recursive: true });
 
-  fs.cpSync(sourceSkillRoot, path.resolve(bundleSkillsRoot, "mikuproject"), {
+  fs.cpSync(sourceSkillRoot, path.resolve(bundleSkillsRoot, "igapyon-miku-project"), {
     recursive: true,
     filter: shouldCopyBundleEntry
   });
 
   process.stdout.write([
-    "[build:bundle] generated bundle/mikuproject-skills",
+    "[build:bundle] generated bundle/miku-project-skills",
     "[build:bundle] copy this directory's contents under your skill home root",
     "[build:bundle] included:",
-    "  - skills/mikuproject",
-    "  - skills/mikuproject/index.json",
-    `  - skills/mikuproject/runtime/${javaRuntime.name}`,
-    `  - skills/mikuproject/runtime/${javaSources.name}`,
-    `  - skills/mikuproject/runtime/${nodeRuntime.name}`,
-    `  - skills/mikuproject/runtime/${nodeSources.name}`
+    "  - skills/igapyon-miku-project",
+    "  - skills/igapyon-miku-project/index.json",
+    `  - skills/igapyon-miku-project/runtime/${javaRuntime.name}`,
+    `  - skills/igapyon-miku-project/runtime/${javaSources.name}`,
+    `  - skills/igapyon-miku-project/runtime/${nodeRuntime.name}`,
+    `  - skills/igapyon-miku-project/runtime/${nodeSources.name}`
   ].join("\n"));
   process.stdout.write("\n");
 }

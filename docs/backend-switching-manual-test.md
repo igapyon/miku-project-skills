@@ -1,6 +1,6 @@
 # Backend Switching Manual Test
 
-この文書は、VS Code で `mikuproject-skills` の MCP backend を手動確認するための手順です。
+この文書は、VS Code で `miku-project-skills` の MCP backend を手動確認するための手順です。
 
 この手順の主経路では MCP server を `workplace/igapyon-mikuproject-mcp-node-0.8.2.tgz`
 から stdio で起動します。HTTP transport を確認する場合は、local checkout 版の
@@ -12,7 +12,7 @@ HTTP entrypoint を別プロセスで起動する手順も使えます。
 以降の VS Code 設定例では、この repository root を `${workspaceFolder}` として参照します。
 
 ```text
-mikuproject-skills
+miku-project-skills
 ```
 
 tarball があることを確認します。
@@ -40,7 +40,7 @@ repository root に `.vscode/mcp.json` を作ります。
 ```json
 {
   "servers": {
-    "mikuproject": {
+    "miku-project": {
       "type": "stdio",
       "command": "npm",
       "args": [
@@ -80,7 +80,7 @@ node /path/to/mikuproject-mcp/packages/node/dist/http.js
 ```json
 {
   "servers": {
-    "mikuproject": {
+    "miku-project": {
       "type": "http",
       "url": "http://127.0.0.1:3000/mcp"
     }
@@ -107,25 +107,25 @@ Developer: Reload Window
 MCP: List Servers
 ```
 
-一覧で `mikuproject` server が見えることを確認します。
+一覧で `miku-project` server が見えることを確認します。
 
 期待:
 
-- server 名が `mikuproject`
+- server 名が `miku-project`
 - 設定元が workspace の `.vscode/mcp.json`
 - 起動 command が `npm exec --yes --package ... -- mikuproject-mcp` 相当
 - server state が running、または start / restart 可能な状態
 
-見えない場合は、Command Palette で MCP 関連のコマンドを開き、`mikuproject` server を start / restart します。
+見えない場合は、Command Palette で MCP 関連のコマンドを開き、`miku-project` server を start / restart します。
 
-Copilot Chat 側でも、Agent mode の tools 一覧を開き、`mikuproject` server または `mikuproject_*` tools が見えることを確認します。
+Copilot Chat 側でも、Agent mode の tools 一覧を開き、`miku-project` server または `mikuproject_*` tools が見えることを確認します。
 
 ## 5. Tool list を確認する
 
 Copilot Chat を Agent mode にして、次のように依頼します。
 
 ```text
-mikuproject MCP server の tool list を確認して。使える mikuproject* tool 名を列挙して。
+miku-project MCP server の tool list を確認して。使える miku-project* tool 名を列挙して。
 ```
 
 少なくとも次が見えることを確認します。
@@ -154,7 +154,7 @@ mikuproject MCP server の tool list を確認して。使える mikuproject* to
 
 `mikuproject_report_wbs_xlsx` などの Phase C report tools が見えない場合は、0.8.2 tarball ではなく古い MCP server package が起動している可能性があります。
 
-その場合は、MCP server 一覧で `mikuproject` server を stop / restart し、VS Code を再読み込みしてから再確認します。
+その場合は、MCP server 一覧で `miku-project` server を stop / restart し、VS Code を再読み込みしてから再確認します。
 
 古い package が疑われる場合は、起動中の server が参照している package version も確認します。期待値は `@igapyon/mikuproject-mcp-node` version `0.8.2` です。
 
@@ -163,7 +163,7 @@ mikuproject MCP server の tool list を確認して。使える mikuproject* to
 Copilot Chat を Agent mode にして、次のように依頼します。
 
 ```text
-mikuproject MCP server の prompt list を確認して。使える mikuproject* prompt 名を列挙して。
+miku-project MCP server の prompt list を確認して。使える miku-project* prompt 名を列挙して。
 ```
 
 少なくとも次が見えることを確認します。
@@ -172,7 +172,7 @@ mikuproject MCP server の prompt list を確認して。使える mikuproject* 
 - `mikuproject_revise_state_with_patch`
 - `mikuproject_review_artifact_diagnostics`
 
-`mikuproject.create_project_draft` のようなドット区切り prompt 名が見える場合は、0.8.2 tarball ではなく古い MCP server package が起動している可能性があります。
+`miku-project.create_project_draft` のようなドット区切り prompt 名が見える場合は、0.8.2 tarball ではなく古い MCP server package が起動している可能性があります。
 
 ## 7. AI spec を読む
 
@@ -190,10 +190,10 @@ mikuproject_ai_spec を呼び出して、結果の ok / operation / diagnostics 
 
 ## 8. Draft から workbook state を作る
 
-まず、Copilot Chat で `mikuproject` skill を使い、テスト用 `project_draft_view` を作ります。
+まず、Copilot Chat で `miku-project` skill を使い、テスト用 `project_draft_view` を作ります。
 
 ```text
-mikuproject skill を使って、次の要件から project_draft_view 形式の WBS 草案を作って。
+miku-project skill を使って、次の要件から project_draft_view 形式の WBS 草案を作って。
 
 要件:
 - project name: VS Code MCP Manual Test
@@ -345,7 +345,7 @@ outputPath は ${workspaceFolder}/workplace/mikuproject-mcp-vscode/report/manual
 
 この手動確認では、VS Code MCP server が Phase C report tools を公開していることを確認します。
 
-`mikuproject-skills` 側の backend policy では、次の report operations は MCP 対応済みとして扱われます。
+`miku-project-skills` 側の backend policy では、次の report operations は MCP 対応済みとして扱われます。
 
 - `wbs-xlsx-export`
 - `daily-svg-export`
@@ -377,8 +377,8 @@ MCP backend 未対応として扱う代表例:
 
 次を確認できたら、この manual test は完了です。
 
-- VS Code から `mikuproject` MCP server が見える
-- MCP server 一覧で `mikuproject` server の設定元と状態を確認できる
+- VS Code から `miku-project` MCP server が見える
+- MCP server 一覧で `miku-project` server の設定元と状態を確認できる
 - `workplace/igapyon-mikuproject-mcp-node-0.8.2.tgz` から起動している
 - `mikuproject_ai_spec` が通る
 - `mikuproject_create_project_draft` が prompt list に見える

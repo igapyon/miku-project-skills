@@ -1,0 +1,32 @@
+{
+ "title": "Miku Project Skill Index",
+ "generator": "miku-indexgen",
+ "generation": {"schemaVersion":1,"inputPath":".","markdownOutput":false,"recursive":true,"includeExtensions":["md","json"],"inputEncoding":"utf8","outputEncoding":"utf8","title":"Miku Project Skill Index","includeGeneratorMetadata":true},
+ "basePath": ".",
+ "files": [
+  {"name":"SKILL.md","path":"SKILL.md","ext":"md","dir":"","size":6716,"description":"Use only when the user explicitly says `miku-project`, `miku-project-skills`, `igapyon-miku-project`, or a supported legacy trigger for miku-project-specific WBS workflows. This skill handles miku-project draft, patch, workbook, and export operations; d...","summary":"Miku Project"},
+  {"name":"backend-policy.json","path":"config/backend-policy.json","ext":"json","dir":"config","size":533},
+  {"name":"INDEX.md","path":"references/INDEX.md","ext":"md","dir":"references","size":2678,"summary":"References Index"},
+  {"name":"file-workflow-examples.md","path":"references/examples/file-workflow-examples.md","ext":"md","dir":"references/examples","size":1339,"summary":"File Workflow Examples"},
+  {"name":"workbook-import-export.md","path":"references/io/workbook-import-export.md","ext":"md","dir":"references/io","size":2317,"summary":"Workbook JSON Import/Export"},
+  {"name":"xlsx-import-export.md","path":"references/io/xlsx-import-export.md","ext":"md","dir":"references/io","size":2542,"summary":"XLSX Import/Export"},
+  {"name":"xml-import-export.md","path":"references/io/xml-import-export.md","ext":"md","dir":"references/io","size":1637,"summary":"XML Import/Export"},
+  {"name":"existing-wbs-review.md","path":"references/prompts/existing-wbs-review.md","ext":"md","dir":"references/prompts","size":1052,"summary":"Existing WBS Review Prompt"},
+  {"name":"new-wbs-draft.md","path":"references/prompts/new-wbs-draft.md","ext":"md","dir":"references/prompts","size":1068,"summary":"New WBS Draft Prompt"},
+  {"name":"patch-request.md","path":"references/prompts/patch-request.md","ext":"md","dir":"references/prompts","size":1228,"summary":"Patch Request Prompt"},
+  {"name":"schedule-compression.md","path":"references/prompts/schedule-compression.md","ext":"md","dir":"references/prompts","size":1258,"summary":"Schedule Compression Prompt"},
+  {"name":"artifact-provenance.md","path":"references/runtime/artifact-provenance.md","ext":"md","dir":"references/runtime","size":1849,"title":"Miku Project runtime artifact provenance","description":"Fixed upstream Release artifacts bundled by this skill.","topics":["miku-project","runtime","provenance"],"category":"reference","status":"active","audience":["maintainer"],"updated":"2026-08-09","summary":"Runtime Artifact Provenance"},
+  {"name":"help-compatibility.json","path":"references/runtime/help-compatibility.json","ext":"json","dir":"references/runtime","size":919},
+  {"name":"operations-map.md","path":"references/runtime/operations-map.md","ext":"md","dir":"references/runtime","size":20033,"title":"Miku Project operation map","description":"Agent Skill operation vocabulary and CLI/MCP backend correspondence.","topics":["miku-project","agent-skills","cli","mcp"],"category":"reference","status":"active","audience":["agent","maintainer"],"updated":"2026-08-06","sources":[{"type":"local-file","role":"primary","path":"skills/igapyon-miku-project/config/backend-policy.json","checked":"2026-08-06"}],"summary":"Operations Map"},
+  {"name":"upstream-map.md","path":"references/runtime/upstream-map.md","ext":"md","dir":"references/runtime","size":2876,"title":"Miku Project upstream runtime map","description":"Skill-local runtime artifacts and their upstream product boundaries.","topics":["miku-project","runtime","upstream"],"category":"reference","status":"active","audience":["agent","maintainer"],"updated":"2026-08-06","sources":[{"type":"runtime-artifact","role":"primary","path":"skills/igapyon-miku-project/runtime/","checked":"2026-08-06"}],"summary":"Upstream Runtime Map"},
+  {"name":"active-workflow-rules.md","path":"references/workflow/active-workflow-rules.md","ext":"md","dir":"references/workflow","size":3961,"title":"Miku Project active workflow rules","description":"Follow-up, intermediate artifact, and backend policy rules for the active skill.","topics":["miku-project","workflow","backend-policy"],"category":"reference","status":"active","audience":["agent"],"updated":"2026-08-06","sources":[{"type":"local-file","role":"primary","path":"skills/igapyon-miku-project/SKILL.md","checked":"2026-08-06"}],"summary":"Active Workflow Rules"},
+  {"name":"draft-import.md","path":"references/workflow/draft-import.md","ext":"md","dir":"references/workflow","size":2446,"summary":"Draft Import"},
+  {"name":"output-location-rules.md","path":"references/workflow/output-location-rules.md","ext":"md","dir":"references/workflow","size":1469,"summary":"Output Location Rules"},
+  {"name":"patch-import.md","path":"references/workflow/patch-import.md","ext":"md","dir":"references/workflow","size":2972,"summary":"Patch Import"},
+  {"name":"report-routing.md","path":"references/workflow/report-routing.md","ext":"md","dir":"references/workflow","size":3094,"summary":"Report Routing"},
+  {"name":"schedule-adjustment.md","path":"references/workflow/schedule-adjustment.md","ext":"md","dir":"references/workflow","size":3231,"summary":"Schedule Adjustment Workflow"},
+  {"name":"spec-handoff.md","path":"references/workflow/spec-handoff.md","ext":"md","dir":"references/workflow","size":1926,"summary":"Spec Handoff"},
+  {"name":"wbs-review.md","path":"references/workflow/wbs-review.md","ext":"md","dir":"references/workflow","size":2578,"summary":"WBS Review Workflow"},
+  {"name":"workbook-handoff.md","path":"references/workflow/workbook-handoff.md","ext":"md","dir":"references/workflow","size":2478,"summary":"Workbook Handoff"}
+ ]
+}
