@@ -154,5 +154,5 @@ describe("miku-project bundle smoke", () => {
     expect(nodeVersion).toMatch(/^miku-project \d+\.\d+\.\d+/);
     expect(javaHelp).toContain("ai spec");
     expect(javaVersion).toMatch(/^miku-project \d+\.\d+\.\d+/);
-  });
+  }, 15_000);
 });

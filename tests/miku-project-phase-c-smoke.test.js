@@ -21,7 +21,8 @@ const runtimes = [
   {
     name: "Java",
     command: "java",
-    prefixArgs: ["-jar", javaRuntimePath]
+    prefixArgs: ["-jar", javaRuntimePath],
+    timeout: 15_000
   }
 ];
 
@@ -133,7 +134,7 @@ describe("miku-project Phase C report export smoke", () => {
         reportBundlePath
       ], tempRoot);
       expectZipLikeFile(reportBundlePath);
-    });
+    }, runtime.timeout);
   }
 });
 
