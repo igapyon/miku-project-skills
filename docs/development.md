@@ -69,11 +69,11 @@ Git tag は別途作成するため、通常は `--no-git-tag-version` を付け
 例:
 
 ```bash
-npm version 0.12.1 --no-git-tag-version
+npm version 0.12.2 --no-git-tag-version
 ```
 
-`package.json` と `package-lock.json` では npm の SemVer として `0.12.1`
-のように記録します。Git tag やリリース名として `v0.12.1` を使う場合でも、
+`package.json` と `package-lock.json` では npm の SemVer として `0.12.2`
+のように記録します。Git tag やリリース名として `v0.12.2` を使う場合でも、
 package version には先頭の `v` を付けません。
 
 更新後は次で root package version が揃っていることを確認します。
