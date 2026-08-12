@@ -5,6 +5,14 @@
   "description": "Agent Skills for miku-project",
   "license": "Apache-2.0",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/igapyon/miku-project-skills.git"
+  },
+  "bugs": {
+    "url": "https://github.com/igapyon/miku-project-skills/issues"
+  },
+  "homepage": "https://github.com/igapyon/miku-project-skills#readme",
   "engines": {
     "node": ">=20"
   },

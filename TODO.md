@@ -144,6 +144,19 @@
 
 - [x] `miku-project-skills` 側だけで無理に実装せず、upstream (`miku-project`) 側の API 追加や公開面整理が妥当な場合は、その都度 `miku-project` 側アクション候補として相談する
 
+### miku-project Issue #123: naming migration
+
+- [x] repository/package名を `miku-project-skills` に統一する
+- [x] installed skill名とdirectoryを `igapyon-miku-project` / `skills/igapyon-miku-project/` に統一する
+- [x] canonical triggerとlegacy compatibility triggerを一つのSkillで提供する
+- [x] runtime、bundle、Release workflow、テストをcanonical path/nameへ移行する
+- [x] GitHub Settingsでrepositoryを `igapyon/mikuproject-skills` から `igapyon/miku-project-skills` へrenameする（repository owner作業）
+- [x] rename後にlocal `origin`、fetch、package metadata、管理中URLを新repository名で確認する
+- [ ] 次のreview済みpublication workflowでcanonical `origin`へのpush routingを確認する
+- [ ] upstream MCP repository/package/tool/resource identifierの移行完了後、legacy MCP compatibility境界を再確認する
+
+詳細なbaseline、現状、handoff手順は `docs/naming-migration.md` を参照する。
+
 ### upstream `miku-project-java`: completed
 
 現時点で、Agent Skills から Java runtime を優先利用するための主要 CLI surface は揃った。
