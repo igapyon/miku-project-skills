@@ -20,19 +20,9 @@
 - miku MCP server 共通設計の旧リンク: [miku-soft-50-mcp-design-v20260501.md](./miku-soft-50-mcp-design-v20260501.md)
 - 実装 TODO: [../TODO.md](../TODO.md)
 
-## Skill discovery index
+## Skill discovery
 
-`skills/igapyon-miku-project/index.json` は、skill 内の Markdown と JSON を列挙する生成済みの
-discovery index です。Agent は詳細な reference を開く前にこれを読んで対象を絞ります。
-
-`SKILL.md`、references、config などの index 対象ファイルを変更したら、次で再生成します。
-
-```bash
-miku-indexgen --input-directory skills/igapyon-miku-project
-```
-
-生成された `index.json` は手編集しません。`npm test` と `npm run build:bundle` は、
-source と installable bundle の両方にこの index があることを検証します。
+Skillの参照資料は`SKILL.md`と`references/INDEX.md`から用途別にたどります。必要な場合は対象サブディレクトリ内でファイル名や本文を検索します。生成root indexは必須にしません。
 
 ## upstream runtime artifact 運用
 
