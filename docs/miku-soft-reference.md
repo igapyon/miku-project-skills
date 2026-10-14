@@ -41,7 +41,7 @@ reference、backend policy、version 付き runtime artifact と配布 bundle �
 
 ## このリポジトリへの適用
 
-- `skills/igapyon-miku-project/` を installable Agent Skill とし、`index.json` は生成物として扱う。
+- `skills/igapyon-miku-project/` を installable Agent Skill とする。参照用indexは全skill共通の必須成果物にせず、具体的な利用先と維持価値がある場合に個別採用する。
 - `runtime/` には実行可能 artifact と sources artifact を version 付きで同梱する。
 - `bundle/`、test、開発用 docs、workplace、OS メタデータは配布 ZIP に含めない。
 - Node.js の対応下限は 20。CI は Node.js 20 / 24 と Java 17 で検証する。

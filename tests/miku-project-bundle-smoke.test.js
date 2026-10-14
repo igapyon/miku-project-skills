@@ -17,14 +17,9 @@ const sourcePolicyConfigPath = path.resolve(
   ROOT,
   "skills/igapyon-miku-project/config/backend-policy.json"
 );
-const sourceIndexPath = path.resolve(ROOT, "skills/igapyon-miku-project/index.json");
 const builtPolicyConfigPath = path.resolve(
   ROOT,
   "bundle/miku-project-skills/skills/igapyon-miku-project/config/backend-policy.json"
-);
-const builtIndexPath = path.resolve(
-  ROOT,
-  "bundle/miku-project-skills/skills/igapyon-miku-project/index.json"
 );
 
 describe("miku-project bundle smoke", () => {
@@ -110,7 +105,6 @@ describe("miku-project bundle smoke", () => {
     expect(fs.existsSync(builtJavaRuntimePath)).toBe(true);
     expect(fs.existsSync(builtJavaSourcesPath)).toBe(true);
     expect(fs.existsSync(builtNodeSourcesPath)).toBe(true);
-    expect(fs.existsSync(builtIndexPath)).toBe(true);
     expect(fs.existsSync(path.resolve(ROOT, "bundle/miku-project-skills/skills/igapyon-miku-project/.DS_Store"))).toBe(false);
     expect(fs.existsSync(path.resolve(ROOT, "bundle/miku-project-skills/skills/igapyon-miku-project/runtime/.DS_Store"))).toBe(false);
     expect(fs.existsSync(path.resolve(isolatedSkillRoot, "igapyon-miku-project/.DS_Store"))).toBe(false);
@@ -118,7 +112,6 @@ describe("miku-project bundle smoke", () => {
     expect(archiveEntries).toEqual(
       expect.arrayContaining([
         "skills/igapyon-miku-project/SKILL.md",
-        "skills/igapyon-miku-project/index.json",
         "skills/igapyon-miku-project/agents/openai.yaml",
         "skills/igapyon-miku-project/config/backend-policy.json",
         "skills/igapyon-miku-project/lib/runtime-artifacts.mjs",
@@ -145,11 +138,6 @@ describe("miku-project bundle smoke", () => {
     expect(JSON.parse(fs.readFileSync(builtPolicyConfigPath, "utf8"))).toEqual(
       JSON.parse(fs.readFileSync(sourcePolicyConfigPath, "utf8"))
     );
-    const skillIndex = JSON.parse(fs.readFileSync(sourceIndexPath, "utf8"));
-    expect(skillIndex.files.map((file) => file.path)).toEqual(
-      expect.arrayContaining(["SKILL.md", "references/INDEX.md"])
-    );
-    expect(JSON.parse(fs.readFileSync(builtIndexPath, "utf8"))).toEqual(skillIndex);
     expect(nodeHelp).toContain("miku-project report all");
     expect(nodeVersion).toMatch(/^miku-project \d+\.\d+\.\d+/);
     expect(javaHelp).toContain("ai spec");

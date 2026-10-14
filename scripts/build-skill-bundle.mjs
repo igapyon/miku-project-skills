@@ -18,7 +18,6 @@ main();
 
 function main() {
   ensureSourceExists(sourceSkillRoot, "skills/igapyon-miku-project");
-  ensureSourceExists(path.resolve(sourceSkillRoot, "index.json"), "skills/igapyon-miku-project/index.json");
   ensureSourceExists(sourceRuntimeRoot, "skills/igapyon-miku-project/runtime");
   const javaRuntime = resolveRequiredArtifact("java");
   const javaSources = resolveRequiredArtifact("java-sources");
@@ -38,7 +37,6 @@ function main() {
     "[build:bundle] copy this directory's contents under your skill home root",
     "[build:bundle] included:",
     "  - skills/igapyon-miku-project",
-    "  - skills/igapyon-miku-project/index.json",
     `  - skills/igapyon-miku-project/runtime/${javaRuntime.name}`,
     `  - skills/igapyon-miku-project/runtime/${javaSources.name}`,
     `  - skills/igapyon-miku-project/runtime/${nodeRuntime.name}`,

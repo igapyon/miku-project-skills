@@ -1,8 +1,8 @@
 # References Index
 
 Use this curated index when you need detailed guidance beyond the core rules in
-`SKILL.md`. For the generated inventory of the full skill package, read
-[`../index.json`](../index.json) first.
+`SKILL.md`. Follow the task-specific links below. Search within the relevant
+subdirectory for other material.
 
 ## Workflow
 
