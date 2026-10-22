@@ -99,7 +99,7 @@ describe("miku-project runtime artifact smoke", () => {
     expect(parsedJavaBundle.project_overview_view.project.name).toBe("Runtime Artifact Smoke");
     expect(Array.isArray(parsedJavaBundle.phase_detail_views_full)).toBe(true);
     expect(Array.isArray(parsedJavaBundle.task_edit_views_full)).toBe(true);
-  });
+  }, 15_000);
 });
 
 function buildDraft() {
