@@ -10,6 +10,12 @@
 - Java runtime artifact を使う場合は Java も必要です
 - 配布 bundle には `miku-project` CLI 実行用の runtime artifact が同梱されます
 
+名称:
+
+- repository / package: `miku-project-skills`
+- installed Skill directory / name: `igapyon-miku-project`
+- display name / conversation trigger: `miku-project`
+
 ## 対象
 
 この手順は、次のような人向けです。
@@ -28,7 +34,7 @@
 
 ```text
 skills/
-  miku-project/
+  igapyon-miku-project/
     runtime/
       miku-project-<version>.jar
       miku-project-<version>.mjs
@@ -42,19 +48,18 @@ zip ファイル名の skill package version と一致するとは限りませ�
 やることは単純です。
 
 1. `miku-project-skills-<version>.zip` を展開する
-2. 展開してできた `skills/` を skill home の直下へコピーする
+2. 展開してできた `skills/igapyon-miku-project/` を installed skills root へコピーする
 3. 実行環境を再起動または再読込する
 4. 利用可能 skill 一覧に `miku-project` が出ることを確認する
 
 コピー後の想定構成は次です。
 
 ```text
-<skill-home>/
-  skills/
-    miku-project/
-      runtime/
-        miku-project-<version>.jar
-        miku-project-<version>.mjs
+<installed-skills-root>/
+  igapyon-miku-project/
+    runtime/
+      miku-project-<version>.jar
+      miku-project-<version>.mjs
 ```
 
 ## 手順
@@ -65,10 +70,12 @@ zip ファイル名の skill package version と一致するとは限りませ�
 
 展開後は `skills/` ディレクトリが見えるはずです。
 
-### 2. skill home を確認する
+### 2. installed skills root を確認する
 
 `miku-project` skill は、bundle 版では `skills/igapyon-miku-project` の中に
 実行用の runtime artifact を同梱しています。
+
+`<installed-skills-root>` は各 Skill directory を直接置く親directoryです。例として Codex の `$CODEX_HOME/skills` があります。ZIP内の `skills/` は配布用の一段であり、installed root の名前に追加しません。
 
 必要なのは次です。
 
@@ -81,27 +88,22 @@ zip ファイル名の skill package version と一致するとは限りませ�
 最終的な構成は次です。
 
 ```text
-<skill-home>/
-  skills/
-    miku-project/
-      runtime/
-        miku-project-<version>.jar
-        miku-project-<version>.mjs
+<installed-skills-root>/
+  igapyon-miku-project/
+    runtime/
+      miku-project-<version>.jar
+      miku-project-<version>.mjs
 ```
 
-この文書では、この `<skill-home>` をインストール先の配置ルートと呼びます。
+## 3. Skill directory を配置する
 
-### 3. `skills/` を skill home へコピーする
-
-展開した `skills/` を、そのまま skill home 直下へコピーします。
+展開した `skills/igapyon-miku-project/` directoryを、`<installed-skills-root>/igapyon-miku-project/` としてコピーします。ZIP内の `skills/` directory全体をもう一段包んだ状態で配置しないでください。
 
 重要なのは次です。
 
-- 展開した `skills/igapyon-miku-project` を `<skill-home>/skills/igapyon-miku-project` に入れる
+- 展開した `skills/igapyon-miku-project` を `<installed-skills-root>/igapyon-miku-project` に入れる
 - `skills/igapyon-miku-project/runtime/miku-project-<version>.jar` も一緒に入ることを保つ
 - `skills/igapyon-miku-project/runtime/miku-project-<version>.mjs` も一緒に入ることを保つ
-
-この bundle では、展開した `skills/` をそのまま `<skill-home>/` へコピーすれば足ります。
 
 ### 4. 実行環境を再起動または再読込する
 
@@ -118,7 +120,7 @@ skill 一覧は起動時に読まれることがあります。
 
 ここで `miku-project` が出ない場合は、まず次を確認します。
 
-- コピー先が skill home 直下になっているか
+- `<installed-skills-root>/igapyon-miku-project/SKILL.md` があるか
 - `skills/igapyon-miku-project/runtime/miku-project-<version>.jar` があるか
 - `skills/igapyon-miku-project/runtime/miku-project-<version>.mjs` があるか
 - 実行環境を再起動または再読込したか
@@ -146,12 +148,11 @@ skill 一覧は起動時に読まれることがあります。
 正しい配置:
 
 ```text
-<skill-home>/
-  skills/
-    miku-project/
-      runtime/
-        miku-project-<version>.jar
-        miku-project-<version>.mjs
+<installed-skills-root>/
+  igapyon-miku-project/
+    runtime/
+      miku-project-<version>.jar
+      miku-project-<version>.mjs
 ```
 
 ## インストール後の最初の試し方

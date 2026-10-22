@@ -7,8 +7,8 @@ or when the host runtime cannot keep the spec internal.
 
 Prefer upstream runtime retrieval:
 
-- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar ai spec`
-- `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs ai spec`
+- `java -jar <skill-root>/runtime/miku-project-<version>.jar ai spec`
+- `node <skill-root>/runtime/miku-project-<version>.mjs ai spec`
 
 Use bundled markdown or source-tree files directly only if the runtime artifacts are unavailable.
 

@@ -17,15 +17,32 @@ export function resolveBackendPolicy({
   repositoryDefaultPolicy = "cli-preferred"
 } = {}, config = {}) {
   const allowedPolicies = config.allowed_policies ?? BACKEND_POLICIES;
-  const policy =
-    userRequestPolicy ??
+  assertAllowedPolicyValues({
+    userRequestPolicy,
+    environmentPolicy,
+    skillConfigPolicy,
+    configPolicy: config.default_policy,
+    repositoryDefaultPolicy
+  }, allowedPolicies);
+
+  if (environmentPolicy && isStrictPolicy(environmentPolicy)) {
+    if (userRequestPolicy) {
+      if (userRequestPolicy === "handoff-only") {
+        return "handoff-only";
+      }
+      if (isBackendPolicyAllowedByStrictEnvironment(userRequestPolicy, environmentPolicy)) {
+        return environmentPolicy;
+      }
+      throw backendPolicyConflict(userRequestPolicy, environmentPolicy);
+    }
+    return environmentPolicy;
+  }
+
+  return userRequestPolicy ??
     environmentPolicy ??
     skillConfigPolicy ??
     config.default_policy ??
     repositoryDefaultPolicy;
-
-  assertAllowedPolicy(policy, allowedPolicies);
-  return policy;
 }
 
 export function planBackendExecution({
@@ -141,8 +158,43 @@ function hardError(policy, operation, attemptedBackends, reason) {
   };
 }
 
+function assertAllowedPolicyValues(policyValues, allowedPolicies) {
+  for (const [source, policy] of Object.entries(policyValues)) {
+    if (policy === undefined || policy === null) {
+      continue;
+    }
+    if (!allowedPolicies.includes(policy)) {
+      throw new Error(`unsupported backend policy from ${source}: ${policy}`);
+    }
+  }
+}
+
 function assertAllowedPolicy(policy, allowedPolicies) {
   if (!allowedPolicies.includes(policy)) {
     throw new Error(`unsupported backend policy: ${policy}`);
   }
+}
+
+function isStrictPolicy(policy) {
+  return ["cli-only", "mcp-only", "handoff-only"].includes(policy);
+}
+
+function isBackendPolicyAllowedByStrictEnvironment(userRequestPolicy, environmentPolicy) {
+  if (environmentPolicy === "cli-only") {
+    return userRequestPolicy === "cli-only" || userRequestPolicy.endsWith("-preferred");
+  }
+  if (environmentPolicy === "mcp-only") {
+    return userRequestPolicy === "mcp-only" || userRequestPolicy.endsWith("-preferred");
+  }
+  return userRequestPolicy === "handoff-only";
+}
+
+function backendPolicyConflict(requestedPolicy, environmentPolicy) {
+  const error = new Error(
+    `requested backend policy ${requestedPolicy} conflicts with environment policy ${environmentPolicy}`
+  );
+  error.code = "backend_policy_conflict";
+  error.requestedPolicy = requestedPolicy;
+  error.environmentPolicy = environmentPolicy;
+  return error;
 }

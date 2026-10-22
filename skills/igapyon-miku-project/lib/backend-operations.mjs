@@ -3,6 +3,9 @@ import { resolveRuntimeArtifactPath } from "./runtime-artifacts.mjs";
 export const DEFAULT_JAVA_RUNTIME_KIND = "java";
 export const DEFAULT_NODE_RUNTIME_KIND = "node";
 
+const BOTH_RUNTIMES = ["java", "node"];
+const JAVA_ONLY = ["java"];
+
 export const operationRegistry = {
   spec: {
     cliArgs: ["ai", "spec"],
@@ -13,6 +16,7 @@ export const operationRegistry = {
       outputModes: [],
       primaryArtifactRole: "ai_spec"
     },
+    runtimeSupport: BOTH_RUNTIMES,
     requires: []
   },
   draft: {
@@ -25,6 +29,8 @@ export const operationRegistry = {
       outputModes: ["path", "content"],
       primaryArtifactRole: "workbook_state"
     },
+    runtimeSupport: BOTH_RUNTIMES,
+    pathArguments: [["inputPath", "--in"], ["outputPath", "--out"]],
     requires: ["inputPath", "outputPath"]
   },
   patch: {
@@ -37,6 +43,8 @@ export const operationRegistry = {
       outputModes: ["path", "content"],
       primaryArtifactRole: "workbook_state"
     },
+    runtimeSupport: BOTH_RUNTIMES,
+    pathArguments: [["statePath", "--state"], ["inputPath", "--in"], ["outputPath", "--out"]],
     requires: ["statePath", "inputPath", "outputPath"]
   },
   "workbook-export": {
@@ -49,102 +57,166 @@ export const operationRegistry = {
       outputModes: ["path", "content"],
       primaryArtifactRole: "mikuproject_workbook_json"
     },
+    runtimeSupport: BOTH_RUNTIMES,
+    pathArguments: [["inputPath", "--in"], ["outputPath", "--out"]],
     requires: ["inputPath", "outputPath"]
   },
-  "wbs-markdown-export": {
-    cliArgs: ["report", "wbs-markdown"],
-    mcpTool: "mikuproject_report_wbs_markdown",
-    mcp: {
-      tool: "mikuproject_report_wbs_markdown",
+  workbook: {
+    aliasOf: "workbook-export"
+  },
+  "project-overview": projectionOperation(
+    ["ai", "export", "project-overview"],
+    "mikuproject_ai_export_project_overview"
+  ),
+  "task-edit": {
+    ...projectionOperation(["ai", "export", "task-edit"], "mikuproject_ai_export_task_edit"),
+    namedArguments: [["taskUid", "--task-uid"], ["select", "--select"]]
+  },
+  "phase-detail": {
+    ...projectionOperation(["ai", "export", "phase-detail"], "mikuproject_ai_export_phase_detail"),
+    namedArguments: [
+      ["phaseUid", "--phase-uid"],
+      ["select", "--select"],
+      ["mode", "--mode"],
+      ["rootTaskUid", "--root-task-uid"],
+      ["maxDepth", "--max-depth"]
+    ]
+  },
+  "patch-validate": {
+    cliArgs: ["ai", "validate-patch"],
+    mcpTool: "mikuproject_ai_validate_patch",
+    runtimeSupport: BOTH_RUNTIMES,
+    pathArguments: [["statePath", "--state"], ["inputPath", "--in"]],
+    requires: ["statePath", "inputPath"]
+  },
+  "state-diff": {
+    cliArgs: ["state", "diff"],
+    mcpTool: "mikuproject_state_diff",
+    runtimeSupport: BOTH_RUNTIMES,
+    pathArguments: [["beforePath", "--before"], ["afterPath", "--after"]],
+    requires: ["beforePath", "afterPath"]
+  },
+  "state-summarize": {
+    cliArgs: ["state", "summarize"],
+    mcpTool: "mikuproject_state_summarize",
+    runtimeSupport: BOTH_RUNTIMES,
+    pathArguments: [["inputPath", "--in"]],
+    requires: ["inputPath"]
+  },
+  "detect-kind": {
+    cliArgs: ["ai", "detect-kind"],
+    mcpTool: "mikuproject_ai_detect_kind",
+    runtimeSupport: BOTH_RUNTIMES,
+    pathArguments: [["inputPath", "--in"]],
+    requires: ["inputPath"]
+  },
+  "xml-export": fileOperation(
+    ["export", "xml"],
+    "mikuproject_export_xml",
+    BOTH_RUNTIMES,
+    {
       pathInputFields: ["workbookPath"],
       inlineInputFields: ["workbookContent"],
       outputModes: ["path", "content"],
-      primaryArtifactRole: "report_output"
-    },
-    requires: ["inputPath", "outputPath"]
-  },
-  "mermaid-export": {
-    cliArgs: ["report", "mermaid"],
-    mcpTool: "mikuproject_report_mermaid",
-    mcp: {
-      tool: "mikuproject_report_mermaid",
-      pathInputFields: ["workbookPath"],
-      inlineInputFields: ["workbookContent"],
+      primaryArtifactRole: "ms_project_xml"
+    }
+  ),
+  "xlsx-import": fileOperation(
+    ["import", "xlsx"],
+    "mikuproject_import_xlsx",
+    BOTH_RUNTIMES,
+    {
+      pathInputFields: ["xlsxPath"],
+      inlineInputFields: ["inputBase64"],
       outputModes: ["path", "content"],
-      primaryArtifactRole: "report_output"
-    },
-    requires: ["inputPath", "outputPath"]
-  },
-  "wbs-xlsx-export": {
-    cliArgs: ["report", "wbs-xlsx"],
-    mcpTool: "mikuproject_report_wbs_xlsx",
-    mcp: {
-      tool: "mikuproject_report_wbs_xlsx",
+      primaryArtifactRole: "mikuproject_workbook_json"
+    }
+  ),
+  "xlsx-export": fileOperation(
+    ["export", "xlsx"],
+    "mikuproject_export_xlsx",
+    BOTH_RUNTIMES,
+    {
       pathInputFields: ["workbookPath"],
       inlineInputFields: ["workbookContent"],
       outputModes: ["path", "base64"],
-      primaryArtifactRole: "report_output"
-    },
+      primaryArtifactRole: "xlsx_workbook"
+    }
+  ),
+  "xlsx-merge-import": {
+    cliArgs: ["merge", "xlsx"],
+    mcpTool: null,
+    runtimeSupport: JAVA_ONLY,
+    pathArguments: [
+      ["statePath", "--state"],
+      ["inputPath", "--in"],
+      ["outputPath", "--out"]
+    ],
+    requires: ["statePath", "inputPath", "outputPath"]
+  },
+  "workbook-import": {
+    cliArgs: ["state", "import"],
+    mcpTool: null,
+    runtimeSupport: JAVA_ONLY,
+    pathArguments: [["inputPath", "--in"], ["outputPath", "--out"]],
     requires: ["inputPath", "outputPath"]
   },
-  "daily-svg-export": {
-    cliArgs: ["report", "daily-svg"],
-    mcpTool: "mikuproject_report_daily_svg",
-    mcp: {
-      tool: "mikuproject_report_daily_svg",
-      pathInputFields: ["workbookPath"],
-      inlineInputFields: ["workbookContent"],
-      outputModes: ["path", "content"],
-      primaryArtifactRole: "report_output"
-    },
-    requires: ["inputPath", "outputPath"]
+  "workbook-merge-import": {
+    cliArgs: ["state", "merge"],
+    mcpTool: null,
+    runtimeSupport: JAVA_ONLY,
+    pathArguments: [
+      ["statePath", "--state"],
+      ["inputPath", "--in"],
+      ["outputPath", "--out"]
+    ],
+    requires: ["statePath", "inputPath", "outputPath"]
   },
-  "weekly-svg-export": {
-    cliArgs: ["report", "weekly-svg"],
-    mcpTool: "mikuproject_report_weekly_svg",
-    mcp: {
-      tool: "mikuproject_report_weekly_svg",
-      pathInputFields: ["workbookPath"],
-      inlineInputFields: ["workbookContent"],
-      outputModes: ["path", "content"],
-      primaryArtifactRole: "report_output"
-    },
-    requires: ["inputPath", "outputPath"]
-  },
-  "monthly-calendar-svg-export": {
-    cliArgs: ["report", "monthly-calendar-svg"],
-    mcpTool: "mikuproject_report_monthly_calendar_svg",
-    mcp: {
-      tool: "mikuproject_report_monthly_calendar_svg",
-      pathInputFields: ["workbookPath"],
-      inlineInputFields: ["workbookContent"],
-      outputModes: ["path", "base64"],
-      primaryArtifactRole: "report_output"
-    },
-    requires: ["inputPath", "outputPath"]
-  },
-  "all-report-export": {
-    cliArgs: ["report", "all"],
-    mcpTool: "mikuproject_report_all",
-    mcp: {
-      tool: "mikuproject_report_all",
-      pathInputFields: ["workbookPath"],
-      inlineInputFields: ["workbookContent"],
-      outputModes: ["path", "base64"],
-      primaryArtifactRole: "report_output"
-    },
-    requires: ["inputPath", "outputPath"]
-  }
+  "wbs-markdown-export": reportOperation(
+    ["report", "wbs-markdown"],
+    "mikuproject_report_wbs_markdown",
+    ["path", "content"]
+  ),
+  "mermaid-export": reportOperation(
+    ["report", "mermaid"],
+    "mikuproject_report_mermaid",
+    ["path", "content"]
+  ),
+  "wbs-xlsx-export": reportOperation(
+    ["report", "wbs-xlsx"],
+    "mikuproject_report_wbs_xlsx",
+    ["path", "base64"]
+  ),
+  "daily-svg-export": reportOperation(
+    ["report", "daily-svg"],
+    "mikuproject_report_daily_svg",
+    ["path", "content"]
+  ),
+  "weekly-svg-export": reportOperation(
+    ["report", "weekly-svg"],
+    "mikuproject_report_weekly_svg",
+    ["path", "content"]
+  ),
+  "monthly-calendar-svg-export": reportOperation(
+    ["report", "monthly-calendar-svg"],
+    "mikuproject_report_monthly_calendar_svg",
+    ["path", "base64"]
+  ),
+  "all-report-export": reportOperation(
+    ["report", "all"],
+    "mikuproject_report_all",
+    ["path", "base64"]
+  )
 };
 
 export const operationCapabilities = Object.fromEntries(
-  Object.entries(operationRegistry).map(([operation, definition]) => [
-    operation,
-    {
-      cli: Boolean(definition.cliArgs),
-      mcp: Boolean(definition.mcpTool)
-    }
-  ])
+  Object.keys(operationRegistry).map((operation) => {
+    const definition = getOperationDefinition(operation);
+    return [operation, {
+      cli: Boolean(definition?.cliArgs),
+      mcp: Boolean(definition?.mcpTool)
+    }];
+  })
 );
 
 export function buildCliInvocation({
@@ -153,10 +225,18 @@ export function buildCliInvocation({
   inputPath,
   outputPath,
   statePath,
+  beforePath,
+  afterPath,
+  taskUid,
+  phaseUid,
+  select,
+  mode,
+  rootTaskUid,
+  maxDepth,
   javaRuntimePath,
   nodeRuntimePath
 } = {}) {
-  const definition = operationRegistry[operation];
+  const definition = getOperationDefinition(operation);
   if (!definition?.cliArgs) {
     throw new Error(`unsupported CLI operation: ${operation}`);
   }
@@ -164,14 +244,30 @@ export function buildCliInvocation({
   assertRequiredFields(definition.requires, {
     inputPath,
     outputPath,
-    statePath
+    statePath,
+    beforePath,
+    afterPath
   }, operation);
 
+  if (!definition.runtimeSupport.includes(runtime)) {
+    throw new Error(`CLI operation ${operation} is not supported by ${runtime} runtime`);
+  }
+
   const operationArgs = [...definition.cliArgs];
-  appendPathArgs(operationArgs, {
+  appendPathArguments(operationArgs, definition.pathArguments, {
     inputPath,
     outputPath,
-    statePath
+    statePath,
+    beforePath,
+    afterPath
+  });
+  appendNamedArguments(operationArgs, definition.namedArguments, {
+    taskUid,
+    phaseUid,
+    select,
+    mode,
+    rootTaskUid,
+    maxDepth
   });
 
   if (runtime === "java") {
@@ -199,11 +295,11 @@ export function buildCliInvocation({
 }
 
 export function getMcpToolName(operation) {
-  return operationRegistry[operation]?.mcpTool ?? null;
+  return getOperationDefinition(operation)?.mcpTool ?? null;
 }
 
 export function getMcpOperationMetadata(operation) {
-  return operationRegistry[operation]?.mcp ?? null;
+  return getOperationDefinition(operation)?.mcp ?? null;
 }
 
 export function getMcpPrimaryArtifactRole(operation) {
@@ -231,25 +327,83 @@ export function extractMcpPrimaryArtifactText(result, operation) {
   return null;
 }
 
-function appendPathArgs(args, {
-  inputPath,
-  outputPath,
-  statePath
-}) {
-  if (statePath) {
-    args.push("--state", statePath);
+function projectionOperation(cliArgs, tool) {
+  return {
+    cliArgs,
+    mcpTool: tool,
+    mcp: {
+      tool,
+      pathInputFields: ["workbookPath"],
+      inlineInputFields: ["workbookContent"],
+      outputModes: ["path", "content"],
+      primaryArtifactRole: "projection"
+    },
+    runtimeSupport: BOTH_RUNTIMES,
+    pathArguments: [["inputPath", "--in"], ["outputPath", "--out"]],
+    requires: ["inputPath"]
+  };
+}
+
+function fileOperation(cliArgs, tool, runtimeSupport, mcp) {
+  return {
+    cliArgs,
+    mcpTool: tool,
+    mcp: {
+      tool,
+      ...mcp
+    },
+    runtimeSupport,
+    pathArguments: [["inputPath", "--in"], ["outputPath", "--out"]],
+    requires: ["inputPath", "outputPath"]
+  };
+}
+
+function reportOperation(cliArgs, tool, outputModes) {
+  return {
+    cliArgs,
+    mcpTool: tool,
+    mcp: {
+      tool,
+      pathInputFields: ["workbookPath"],
+      inlineInputFields: ["workbookContent"],
+      outputModes,
+      primaryArtifactRole: "report_output"
+    },
+    runtimeSupport: BOTH_RUNTIMES,
+    pathArguments: [["inputPath", "--in"], ["outputPath", "--out"]],
+    requires: ["inputPath", "outputPath"]
+  };
+}
+
+function getOperationDefinition(operation) {
+  const definition = operationRegistry[operation];
+  if (!definition?.aliasOf) {
+    return definition;
   }
-  if (inputPath) {
-    args.push("--in", inputPath);
-  }
-  if (outputPath) {
-    args.push("--out", outputPath);
+  return operationRegistry[definition.aliasOf];
+}
+
+function appendPathArguments(args, pathArguments = [], values) {
+  for (const [field, option] of pathArguments) {
+    const value = values[field];
+    if (value !== undefined && value !== null) {
+      args.push(option, value);
+    }
   }
 }
 
-function assertRequiredFields(requiredFields, values, operation) {
+function appendNamedArguments(args, namedArguments = [], values) {
+  for (const [field, option] of namedArguments) {
+    const value = values[field];
+    if (value !== undefined && value !== null) {
+      args.push(option, String(value));
+    }
+  }
+}
+
+function assertRequiredFields(requiredFields = [], values, operation) {
   for (const field of requiredFields) {
-    if (!values[field]) {
+    if (values[field] === undefined || values[field] === null || values[field] === "") {
       throw new Error(`missing ${field} for operation: ${operation}`);
     }
   }

@@ -1,3 +1,6 @@
+import fs from "node:fs";
+import path from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 import {
@@ -7,12 +10,20 @@ import {
   getMcpOperationMetadata,
   getMcpPrimaryArtifactRole,
   getMcpToolName,
+  operationRegistry,
   operationCapabilities
 } from "../skills/igapyon-miku-project/lib/backend-operations.mjs";
 import { resolveRuntimeArtifactPath } from "../skills/igapyon-miku-project/lib/runtime-artifacts.mjs";
 
 const javaRuntimePath = resolveRuntimeArtifactPath({ kind: "java" });
 const nodeRuntimePath = resolveRuntimeArtifactPath({ kind: "node" });
+const operationsMap = fs.readFileSync(path.resolve(
+  process.cwd(),
+  "skills/igapyon-miku-project/references/runtime/operations-map.md"
+), "utf8");
+const backendCorrespondenceTable = operationsMap
+  .split("## Backend Operation Correspondence")[1]
+  .split("\nUnder `cli-only`")[0];
 
 describe("miku-project backend operation registry", () => {
   it("exposes operation capabilities for backend policy selection", () => {
@@ -23,6 +34,26 @@ describe("miku-project backend operation registry", () => {
     expect(operationCapabilities["weekly-svg-export"]).toEqual({ cli: true, mcp: true });
     expect(operationCapabilities["monthly-calendar-svg-export"]).toEqual({ cli: true, mcp: true });
     expect(operationCapabilities["all-report-export"]).toEqual({ cli: true, mcp: true });
+    expect(operationCapabilities["xlsx-import"]).toEqual({ cli: true, mcp: true });
+    expect(operationCapabilities["xlsx-merge-import"]).toEqual({ cli: true, mcp: false });
+    expect(operationCapabilities["workbook-import"]).toEqual({ cli: true, mcp: false });
+    expect(operationCapabilities["workbook-merge-import"]).toEqual({ cli: true, mcp: false });
+    expect(operationCapabilities.workbook).toEqual(operationCapabilities["workbook-export"]);
+    expect(operationCapabilities["xml-import"]).toBeUndefined();
+    expect(Object.keys(operationRegistry)).toEqual([
+      "spec", "draft", "patch", "workbook-export", "workbook",
+      "project-overview", "task-edit", "phase-detail", "patch-validate",
+      "state-diff", "state-summarize", "detect-kind", "xml-export",
+      "xlsx-import", "xlsx-export", "xlsx-merge-import", "workbook-import",
+      "workbook-merge-import", "wbs-markdown-export", "mermaid-export",
+      "wbs-xlsx-export", "daily-svg-export", "weekly-svg-export",
+      "monthly-calendar-svg-export", "all-report-export"
+    ]);
+    for (const operation of Object.keys(operationRegistry)) {
+      expect(backendCorrespondenceTable).toContain(`\`${operation}\``);
+    }
+    expect(backendCorrespondenceTable).not.toContain("| `xml-import` |");
+    expect(operationsMap).toContain("`xml-import` is omitted from the executable capability table");
   });
 
   it("builds Java CLI invocations for report exports", () => {
@@ -91,6 +122,143 @@ describe("miku-project backend operation registry", () => {
       "--out",
       "state/workbook.after.json"
     ]);
+  });
+
+  it("builds projection, validation, and diff arguments with their command-specific options", () => {
+    expect(buildCliInvocation({
+      operation: "project-overview",
+      runtime: "node",
+      inputPath: "state/workbook.json",
+      outputPath: "state/overview.editjson"
+    }).args.slice(1)).toEqual([
+      "ai", "export", "project-overview",
+      "--in", "state/workbook.json",
+      "--out", "state/overview.editjson"
+    ]);
+
+    expect(buildCliInvocation({
+      operation: "task-edit",
+      runtime: "node",
+      inputPath: "state/workbook.json",
+      taskUid: "task-17",
+      select: "uid"
+    }).args.slice(1)).toEqual([
+      "ai", "export", "task-edit",
+      "--in", "state/workbook.json",
+      "--task-uid", "task-17",
+      "--select", "uid"
+    ]);
+
+    expect(buildCliInvocation({
+      operation: "phase-detail",
+      runtime: "java",
+      inputPath: "state/workbook.json",
+      phaseUid: "phase-2",
+      select: "uid",
+      mode: "scoped",
+      rootTaskUid: "task-0",
+      maxDepth: 0
+    }).args.slice(2)).toEqual([
+      "ai", "export", "phase-detail",
+      "--in", "state/workbook.json",
+      "--phase-uid", "phase-2",
+      "--select", "uid",
+      "--mode", "scoped",
+      "--root-task-uid", "task-0",
+      "--max-depth", "0"
+    ]);
+
+    expect(buildCliInvocation({
+      operation: "patch-validate",
+      runtime: "node",
+      statePath: "state/workbook.json",
+      inputPath: "state/patch.editjson"
+    }).args.slice(1)).toEqual([
+      "ai", "validate-patch",
+      "--state", "state/workbook.json",
+      "--in", "state/patch.editjson"
+    ]);
+
+    expect(buildCliInvocation({
+      operation: "state-diff",
+      runtime: "java",
+      beforePath: "state/before.json",
+      afterPath: "state/after.json"
+    }).args.slice(2)).toEqual([
+      "state", "diff", "--before", "state/before.json", "--after", "state/after.json"
+    ]);
+  });
+
+  it("normalizes the workbook alias and rejects missing inputs or unsupported runtimes", () => {
+    const canonical = buildCliInvocation({
+      operation: "workbook-export",
+      runtime: "java",
+      inputPath: "state/workbook.json",
+      outputPath: "state/normalized.json"
+    });
+    const alias = buildCliInvocation({
+      operation: "workbook",
+      runtime: "java",
+      inputPath: "state/workbook.json",
+      outputPath: "state/normalized.json"
+    });
+
+    expect(alias).toEqual(canonical);
+    expect(getMcpToolName("workbook")).toBe(getMcpToolName("workbook-export"));
+    expect(() => buildCliInvocation({ operation: "state-diff", beforePath: "before.json" }))
+      .toThrow(/missing afterPath/);
+    expect(() => buildCliInvocation({
+      operation: "patch",
+      inputPath: "patch.json",
+      outputPath: "next.json"
+    })).toThrow(/missing statePath/);
+    expect(() => buildCliInvocation({
+      operation: "xlsx-merge-import",
+      runtime: "node",
+      statePath: "state.json",
+      inputPath: "sheet.xlsx",
+      outputPath: "next.json"
+    })).toThrow(/not supported by node runtime/);
+  });
+
+  it("builds a CLI invocation for every registered operation", () => {
+    const javaOnlyOperations = new Set([
+      "xlsx-merge-import",
+      "workbook-import",
+      "workbook-merge-import"
+    ]);
+
+    for (const operation of Object.keys(operationRegistry)) {
+      const invocation = buildCliInvocation({
+        operation,
+        runtime: javaOnlyOperations.has(operation) ? "java" : "node",
+        inputPath: "input.json",
+        outputPath: "output.json",
+        statePath: "state.json",
+        beforePath: "before.json",
+        afterPath: "after.json",
+        taskUid: "task-1",
+        phaseUid: "phase-1",
+        select: "uid",
+        mode: "scoped",
+        rootTaskUid: "task-1",
+        maxDepth: 0
+      });
+
+      expect(invocation.command).toBe(javaOnlyOperations.has(operation) ? "java" : "node");
+      expect(Array.isArray(invocation.args)).toBe(true);
+    }
+  });
+
+  it("uses MCP metadata only where the operation reference documents it", () => {
+    expect(getMcpOperationMetadata("project-overview")).toMatchObject({
+      tool: "mikuproject_ai_export_project_overview",
+      primaryArtifactRole: "projection"
+    });
+    expect(getMcpOperationMetadata("patch-validate")).toBeNull();
+    expect(getMcpPrimaryArtifactRole("state-diff")).toBeNull();
+    expect(getMcpToolName("xlsx-import")).toBe("mikuproject_import_xlsx");
+    expect(getMcpToolName("workbook-import")).toBeNull();
   });
 
   it("returns MCP tool names only for MCP-supported operations", () => {

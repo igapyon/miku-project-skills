@@ -61,7 +61,7 @@ AI 向け編集用 JSON 群は file workflow ではなく、projection / patch �
 ### 構造忠実 workbook `XLSX`
 
 - Java runtime: `export xlsx`, `validate xlsx`, `import xlsx`, `merge xlsx`
-- Node.js runtime: `export xlsx`
+- Node.js runtime: `export xlsx`, `import xlsx`
 
 ## `MS Project XML`
 

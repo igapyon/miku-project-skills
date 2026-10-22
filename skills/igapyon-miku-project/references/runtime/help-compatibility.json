@@ -12,6 +12,7 @@
     "state from-draft",
     "state apply-patch",
     "state diff",
+    "import xlsx",
     "export workbook-json",
     "report all",
     "report mermaid"

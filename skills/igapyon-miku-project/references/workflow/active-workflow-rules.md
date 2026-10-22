@@ -40,7 +40,10 @@ Use this reference when the skill is already active and you need follow-up handl
 - treat skill-local configuration files as machine-readable mirrors for tooling, lower priority than explicit user instructions, environment policy, and the Markdown instructions
 - treat exact policy values in the current user request as an explicit backend policy: `cli-only`, `cli-preferred`, `mcp-only`, `mcp-preferred`, or `handoff-only`
 - accept simple surrounding wording such as `で`, `として`, `固定`, `only`, `preferred`, or `fallbackなし` when the policy value itself is exact
-- the latest explicit user policy in the active request wins over the repository default
+- the latest explicit user policy in the active request wins over the repository default only within the backends allowed by the environment
+- environment `cli-only`, `mcp-only`, and `handoff-only` are hard constraints; a user preference cannot enable a forbidden backend
+- if a user explicitly requires a backend forbidden by a strict environment policy, stop before backend inspection or execution and report `backend_policy_conflict`
+- a user may choose `handoff-only` under a CLI- or MCP-allowed environment because it reduces execution
 - do not infer a strict policy from backend names alone; `MCP でも使える?` is a capability question, not `mcp-only`
 - if multiple policy values appear in the same request and one is not clearly negated, ask which policy to use before executing
 - under `cli-only`, do not inspect or call MCP tools as an automatic fallback

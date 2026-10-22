@@ -5,12 +5,12 @@ topics: [miku-project, agent-skills, cli, mcp]
 category: reference
 status: active
 audience: [agent, maintainer]
-updated: 2026-08-06
+updated: 2026-10-23
 sources:
   - type: local-file
     role: primary
     path: skills/igapyon-miku-project/config/backend-policy.json
-    checked: 2026-08-06
+    checked: 2026-10-23
 ---
 
 # Operations Map
@@ -25,11 +25,14 @@ Conversation workflow:
 - `draft`: accept AI-produced `project_draft_view`
 - `patch`: accept AI-produced `Patch JSON`
 - `workbook`: return current `mikuproject_workbook_json`
+- `workbook-export`: export or normalize workbook JSON as a file-oriented operation
 - `project-overview`: return `project_overview_view` for existing-plan entry
 - `task-edit`: return `task_edit_view` for local task revision
 - `phase-detail`: return `phase_detail_view` for local phase revision
 - `patch-validate`: validate `patch_json` against current workbook state
 - `state-diff`: summarize changes between two workbook states
+- `state-summarize`: summarize current workbook state
+- `detect-kind`: identify the kind of a supported input document
 
 File workflow:
 
@@ -54,18 +57,23 @@ Report workflow:
 
 ## Runtime Search Order
 
+`<skill-root>` means the absolute directory that contains the loaded `SKILL.md`.
+It is the installed directory `igapyon-miku-project`, or this repository's
+`skills/igapyon-miku-project` while developing. Resolve CLI runtime paths from
+that directory; do not interpret them relative to the caller's workspace.
+
 When this skill is installed from `skill-bundle`, prefer the bundled runtime artifacts:
 
-- `skills/igapyon-miku-project/runtime/miku-project-<version>.jar`
-- `skills/igapyon-miku-project/runtime/miku-project-<version>.mjs`
+- `<skill-root>/runtime/miku-project-<version>.jar`
+- `<skill-root>/runtime/miku-project-<version>.mjs`
 
 `<version>` is a placeholder. Resolve the actual versioned artifact under `runtime/`
 before invoking the CLI.
 
 When working in the development repository, use the same skill-local runtime paths:
 
-- `skills/igapyon-miku-project/runtime/miku-project-<version>.jar`
-- `skills/igapyon-miku-project/runtime/miku-project-<version>.mjs`
+- `<skill-root>/runtime/miku-project-<version>.jar`
+- `<skill-root>/runtime/miku-project-<version>.mjs`
 
 Do not search broadly for alternate copies before checking these expected locations.
 
@@ -74,8 +82,8 @@ Do not search broadly for alternate copies before checking these expected locati
 List Java examples before Node.js examples so agents see the Java runtime first.
 Use the runtime that supports the requested operation:
 
-- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar ...`
-- `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs ...`
+- `java -jar <skill-root>/runtime/miku-project-<version>.jar ...`
+- `node <skill-root>/runtime/miku-project-<version>.mjs ...`
 
 Use the upstream CLI runtime artifacts before falling back to direct file reads or UI-oriented flows.
 
@@ -87,9 +95,11 @@ similarity, not byte-for-byte identity. The executable compatibility fixture is
 vocabulary and Java-only / Node-only operations while checking exit status,
 stdout, stderr, and the final newline.
 
-The current `0.8.3.3` artifacts provide usage lists. The fuller AI-era command
-help contract is an upstream responsibility and is tracked in
-[`docs/upstream-miku-project-ai-era-cli-contract-request.md`](../../../../docs/upstream-miku-project-ai-era-cli-contract-request.md).
+The bundled Java and Node.js artifacts are pinned to `0.12.0`. Their top-level
+help output provides the current usage list and general I/O rules. This map does
+not claim that command-specific help has been verified as a shared contract.
+The broader AI-era help request is tracked in the
+[upstream request](https://github.com/igapyon/miku-project-skills/blob/devel/docs/upstream-miku-project-ai-era-cli-contract-request.md).
 
 ## Backend Operation Correspondence
 
@@ -107,33 +117,37 @@ Current `miku-project-mcp` does not expose every CLI import or merge operation.
 Under `mcp-only`, missing MCP tools remain unavailable rather than falling back
 to CLI.
 
-| Agent Skill operation | CLI backend command family | MCP backend tool | Notes |
-| --- | --- | --- | --- |
-| `spec` | `ai spec` | `mikuproject_ai_spec` | Phase A. Same AI spec role. |
-| `draft` | `state from-draft` | `mikuproject_state_from_draft` | Phase A. Converts `project_draft_view` to workbook state. |
-| `patch` | `state apply-patch` | `mikuproject_state_apply_patch` | Phase A. Requires base workbook state. |
-| `workbook` / `workbook-export` | `export workbook-json` | `mikuproject_export_workbook_json` | Phase A. Exports or normalizes workbook JSON. |
-| `project-overview` | `ai export project-overview` | `mikuproject_ai_export_project_overview` | Phase A. AI projection for existing-plan entry. |
-| `task-edit` | `ai export task-edit` | `mikuproject_ai_export_task_edit` | Phase A. AI projection for task-level editing. |
-| `phase-detail` | `ai export phase-detail` | `mikuproject_ai_export_phase_detail` | Phase A. AI projection for phase-level editing. |
-| `patch-validate` | `ai validate-patch` | `mikuproject_ai_validate_patch` | Phase A. Validates patch against workbook state. |
-| `state-diff` | `state diff` | `mikuproject_state_diff` | Phase A. Compares before / after workbook states. |
-| `state-summarize` | `state summarize` | `mikuproject_state_summarize` | Phase A. Summarizes workbook state. |
-| `detect-kind` | `ai detect-kind` | `mikuproject_ai_detect_kind` | Phase A. Detects product document kind. |
-| `xml-export` | `export xml` | `mikuproject_export_xml` | Phase B. Exports MS Project XML. |
-| `xml-import` | `import xml` when supported by CLI | Not currently exposed | Phase B gap. Keep as CLI or handoff until MCP parity exists. |
-| `xlsx-import` | `import xlsx` | `mikuproject_import_xlsx` | Phase B. Imports structural workbook XLSX. |
-| `xlsx-export` | `export xlsx` | `mikuproject_export_xlsx` | Phase B. Exports structural workbook XLSX. |
-| `xlsx-merge-import` | `merge xlsx` | Not currently exposed | Phase B gap. Keep as CLI or handoff until MCP parity exists. |
-| `workbook-import` | `state import` | Not currently exposed | Phase B gap. Keep as CLI or handoff until MCP parity exists. |
-| `workbook-merge-import` | `state merge` | Not currently exposed | Phase B gap. Keep as CLI or handoff until MCP parity exists. |
-| `wbs-markdown-export` | `report wbs-markdown` | `mikuproject_report_wbs_markdown` | Phase C. Human-facing Markdown report. |
-| `mermaid-export` | `report mermaid` | `mikuproject_report_mermaid` | Phase C. Mermaid gantt text. |
-| `wbs-xlsx-export` | `report wbs-xlsx` | `mikuproject_report_wbs_xlsx` | Phase C. Human-facing WBS XLSX report. |
-| `daily-svg-export` | `report daily-svg` | `mikuproject_report_daily_svg` | Phase C. Daily SVG report. |
-| `weekly-svg-export` | `report weekly-svg` | `mikuproject_report_weekly_svg` | Phase C. Weekly SVG report. |
-| `monthly-calendar-svg-export` | `report monthly-calendar-svg` | `mikuproject_report_monthly_calendar_svg` | Phase C. Monthly calendar SVG archive. |
-| `all-report-export` | `report all` | `mikuproject_report_all` | Phase C. Report bundle ZIP. |
+`xml-import` is omitted from the executable capability table below. Its
+documented workflow and runtime support remain tracked separately in
+[Issue #77](https://github.com/igapyon/miku-project-skills/issues/77), outside
+this correction.
+
+| Agent Skill operation | CLI backend command family | Java | Node.js | MCP backend tool | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `spec` | `ai spec` | Yes | Yes | `mikuproject_ai_spec` | Phase A. Same AI spec role. |
+| `draft` | `state from-draft` | Yes | Yes | `mikuproject_state_from_draft` | Phase A. Converts `project_draft_view` to workbook state. |
+| `patch` | `state apply-patch` | Yes | Yes | `mikuproject_state_apply_patch` | Phase A. Requires base workbook state. |
+| `workbook` / `workbook-export` | `export workbook-json` | Yes | Yes | `mikuproject_export_workbook_json` | Phase A. `workbook` is an alias. |
+| `project-overview` | `ai export project-overview` | Yes | Yes | `mikuproject_ai_export_project_overview` | Phase A. AI projection for existing-plan entry. |
+| `task-edit` | `ai export task-edit` | Yes | Yes | `mikuproject_ai_export_task_edit` | Phase A. AI projection for task-level editing. |
+| `phase-detail` | `ai export phase-detail` | Yes | Yes | `mikuproject_ai_export_phase_detail` | Phase A. AI projection for phase-level editing. |
+| `patch-validate` | `ai validate-patch` | Yes | Yes | `mikuproject_ai_validate_patch` | Phase A. Validates patch against workbook state. |
+| `state-diff` | `state diff` | Yes | Yes | `mikuproject_state_diff` | Phase A. Compares before / after workbook states. |
+| `state-summarize` | `state summarize` | Yes | Yes | `mikuproject_state_summarize` | Phase A. Summarizes workbook state. |
+| `detect-kind` | `ai detect-kind` | Yes | Yes | `mikuproject_ai_detect_kind` | Phase A. Detects product document kind. |
+| `xml-export` | `export xml` | Yes | Yes | `mikuproject_export_xml` | Phase B. Exports MS Project XML. |
+| `xlsx-import` | `import xlsx` | Yes | Yes | `mikuproject_import_xlsx` | Phase B. Imports structural workbook XLSX. |
+| `xlsx-export` | `export xlsx` | Yes | Yes | `mikuproject_export_xlsx` | Phase B. Exports structural workbook XLSX. |
+| `xlsx-merge-import` | `merge xlsx` | Yes | No | Not exposed | Java-only. |
+| `workbook-import` | `state import` | Yes | No | Not exposed | Java-only. |
+| `workbook-merge-import` | `state merge` | Yes | No | Not exposed | Java-only. |
+| `wbs-markdown-export` | `report wbs-markdown` | Yes | Yes | `mikuproject_report_wbs_markdown` | Phase C. Human-facing Markdown report. |
+| `mermaid-export` | `report mermaid` | Yes | Yes | `mikuproject_report_mermaid` | Phase C. Mermaid gantt text. |
+| `wbs-xlsx-export` | `report wbs-xlsx` | Yes | Yes | `mikuproject_report_wbs_xlsx` | Phase C. Human-facing WBS XLSX report. |
+| `daily-svg-export` | `report daily-svg` | Yes | Yes | `mikuproject_report_daily_svg` | Phase C. Daily SVG report. |
+| `weekly-svg-export` | `report weekly-svg` | Yes | Yes | `mikuproject_report_weekly_svg` | Phase C. Weekly SVG report. |
+| `monthly-calendar-svg-export` | `report monthly-calendar-svg` | Yes | Yes | `mikuproject_report_monthly_calendar_svg` | Phase C. Monthly calendar SVG archive. |
+| `all-report-export` | `report all` | Yes | Yes | `mikuproject_report_all` | Phase C. Report bundle ZIP. |
 
 Under `cli-only`, use only the CLI backend column. Under `mcp-only`, use only
 the MCP backend column and fail if the operation is not exposed there. Under a
@@ -234,36 +248,36 @@ first, then the closest Node.js command when one exists.
 
 | Operation | Java CLI example | Node.js CLI example | Notes |
 | --- | --- | --- | --- |
-| Version | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar --version` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs --version` | Same purpose. |
-| AI JSON spec | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar ai spec` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs ai spec` | Same purpose. |
-| Draft import | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar state from-draft --in draft.editjson --out workbook.json` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs state from-draft --in draft.editjson --out workbook.json` | Same purpose. |
-| AI document kind detection | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar ai detect-kind --in document.json` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs ai detect-kind --in document.json` | Same purpose. |
-| Workbook JSON validation | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar state validate --in workbook.json` | Not available as a direct Node.js command | Java validates workbook JSON directly. |
-| Workbook JSON replace import | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar state import --in workbook.json --out workbook.normalized.json` | Not available as a direct Node.js command | Java normalizes workbook JSON directly. |
-| Workbook JSON merge import | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar state merge --state workbook.json --in workbook.patch.json --out workbook.next.json` | Not available as a direct Node.js command | Java merges workbook JSON directly. |
-| Workbook JSON export / normalize | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar export workbook-json --in workbook.json --out workbook.normalized.json` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs export workbook-json --in workbook.json --out workbook.normalized.json` | Same purpose. |
-| Project overview view | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar ai export project-overview --in workbook.json --out overview.editjson` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs ai export project-overview --in workbook.json --out overview.editjson` | Same purpose. |
-| AI projection bundle | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar ai export bundle --in workbook.json --out bundle.editjson` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs ai export bundle --in workbook.json --out bundle.editjson` | Same purpose. |
-| Task edit view | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar ai export task-edit --in workbook.json --task-uid taskUid --out task.editjson` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs ai export task-edit --in workbook.json --task-uid taskUid --out task.editjson` | Same purpose. |
-| Phase detail view | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar ai export phase-detail --in workbook.json --phase-uid phaseUid --out phase.editjson` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs ai export phase-detail --in workbook.json --phase-uid phaseUid --out phase.editjson` | Same purpose. |
-| Patch validation | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar ai validate-patch --state workbook.json --in patch.editjson` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs ai validate-patch --state workbook.json --in patch.editjson` | Same purpose. |
-| Patch apply | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar state apply-patch --state workbook.json --in patch.editjson --out workbook.next.json` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs state apply-patch --state workbook.json --in patch.editjson --out workbook.next.json` | Same purpose. |
-| State summary | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar state summarize --in workbook.json` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs state summarize --in workbook.json` | Same purpose. |
-| State diff | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar state diff --before workbook.before.json --after workbook.after.json` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs state diff --before workbook.before.json --after workbook.after.json` | Same purpose. |
-| XML validation | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar validate xml --in project.xml` | Not available as a direct Node.js command | Java validates XML directly. |
-| XML export | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar export xml --in workbook.json --out project.xml` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs export xml --in workbook.json --out project.xml` | Same purpose. |
-| Structural XLSX export | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar export xlsx --in workbook.json --out workbook.xlsx` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs export xlsx --in workbook.json --out workbook.xlsx` | Same purpose. |
-| Structural XLSX validation | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar validate xlsx --in workbook.xlsx` | Not available as a direct Node.js command | Java validates workbook XLSX directly. |
-| Structural XLSX replace import | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar import xlsx --in workbook.xlsx --out workbook.json` | Not available as a direct Node.js command | Java imports XLSX directly. |
-| Structural XLSX merge import | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar merge xlsx --state workbook.json --in workbook.xlsx --out workbook.next.json` | Not available as a direct Node.js command | Java merges XLSX edits directly. |
-| Report bundle | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar report all --in workbook.json --out report-bundle.zip` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs report all --in workbook.json --out report-bundle.zip` | Same purpose. |
-| Report directory | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar report dir --in workbook.json --out report.dir` | Not available as a direct Node.js command | Java can write an unpacked report directory. |
-| WBS XLSX report | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar report wbs-xlsx --in workbook.json --out wbs.xlsx` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs report wbs-xlsx --in workbook.json --out wbs.xlsx` | Same purpose. |
-| Daily SVG report | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar report daily-svg --in workbook.json --out daily.svg` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs report daily-svg --in workbook.json --out daily.svg` | Same purpose. |
-| Weekly SVG report | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar report weekly-svg --in workbook.json --out weekly.svg` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs report weekly-svg --in workbook.json --out weekly.svg` | Same purpose. |
-| Monthly SVG report | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar report monthly-calendar-svg --in workbook.json --out monthly-calendar.zip` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs report monthly-calendar-svg --in workbook.json --out monthly-calendar.zip` | Same purpose. |
-| WBS Markdown report | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar report wbs-markdown --in workbook.json --out wbs.md` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs report wbs-markdown --in workbook.json --out wbs.md` | Same purpose. |
-| Mermaid report | `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar report mermaid --in workbook.json --out mermaid.mmd` | `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs report mermaid --in workbook.json --out mermaid.mmd` | Same purpose. |
+| Version | `java -jar <skill-root>/runtime/miku-project-<version>.jar --version` | `node <skill-root>/runtime/miku-project-<version>.mjs --version` | Same purpose. |
+| AI JSON spec | `java -jar <skill-root>/runtime/miku-project-<version>.jar ai spec` | `node <skill-root>/runtime/miku-project-<version>.mjs ai spec` | Same purpose. |
+| Draft import | `java -jar <skill-root>/runtime/miku-project-<version>.jar state from-draft --in draft.editjson --out workbook.json` | `node <skill-root>/runtime/miku-project-<version>.mjs state from-draft --in draft.editjson --out workbook.json` | Same purpose. |
+| AI document kind detection | `java -jar <skill-root>/runtime/miku-project-<version>.jar ai detect-kind --in document.json` | `node <skill-root>/runtime/miku-project-<version>.mjs ai detect-kind --in document.json` | Same purpose. |
+| Workbook JSON validation | `java -jar <skill-root>/runtime/miku-project-<version>.jar state validate --in workbook.json` | Not available as a direct Node.js command | Java validates workbook JSON directly. |
+| Workbook JSON replace import | `java -jar <skill-root>/runtime/miku-project-<version>.jar state import --in workbook.json --out workbook.normalized.json` | Not available as a direct Node.js command | Java normalizes workbook JSON directly. |
+| Workbook JSON merge import | `java -jar <skill-root>/runtime/miku-project-<version>.jar state merge --state workbook.json --in workbook.patch.json --out workbook.next.json` | Not available as a direct Node.js command | Java merges workbook JSON directly. |
+| Workbook JSON export / normalize | `java -jar <skill-root>/runtime/miku-project-<version>.jar export workbook-json --in workbook.json --out workbook.normalized.json` | `node <skill-root>/runtime/miku-project-<version>.mjs export workbook-json --in workbook.json --out workbook.normalized.json` | Same purpose. |
+| Project overview view | `java -jar <skill-root>/runtime/miku-project-<version>.jar ai export project-overview --in workbook.json --out overview.editjson` | `node <skill-root>/runtime/miku-project-<version>.mjs ai export project-overview --in workbook.json --out overview.editjson` | Same purpose. |
+| AI projection bundle | `java -jar <skill-root>/runtime/miku-project-<version>.jar ai export bundle --in workbook.json --out bundle.editjson` | `node <skill-root>/runtime/miku-project-<version>.mjs ai export bundle --in workbook.json --out bundle.editjson` | Same purpose. |
+| Task edit view | `java -jar <skill-root>/runtime/miku-project-<version>.jar ai export task-edit --in workbook.json --task-uid taskUid --out task.editjson` | `node <skill-root>/runtime/miku-project-<version>.mjs ai export task-edit --in workbook.json --task-uid taskUid --out task.editjson` | Same purpose. |
+| Phase detail view | `java -jar <skill-root>/runtime/miku-project-<version>.jar ai export phase-detail --in workbook.json --phase-uid phaseUid --out phase.editjson` | `node <skill-root>/runtime/miku-project-<version>.mjs ai export phase-detail --in workbook.json --phase-uid phaseUid --out phase.editjson` | Same purpose. |
+| Patch validation | `java -jar <skill-root>/runtime/miku-project-<version>.jar ai validate-patch --state workbook.json --in patch.editjson` | `node <skill-root>/runtime/miku-project-<version>.mjs ai validate-patch --state workbook.json --in patch.editjson` | Same purpose. |
+| Patch apply | `java -jar <skill-root>/runtime/miku-project-<version>.jar state apply-patch --state workbook.json --in patch.editjson --out workbook.next.json` | `node <skill-root>/runtime/miku-project-<version>.mjs state apply-patch --state workbook.json --in patch.editjson --out workbook.next.json` | Same purpose. |
+| State summary | `java -jar <skill-root>/runtime/miku-project-<version>.jar state summarize --in workbook.json` | `node <skill-root>/runtime/miku-project-<version>.mjs state summarize --in workbook.json` | Same purpose. |
+| State diff | `java -jar <skill-root>/runtime/miku-project-<version>.jar state diff --before workbook.before.json --after workbook.after.json` | `node <skill-root>/runtime/miku-project-<version>.mjs state diff --before workbook.before.json --after workbook.after.json` | Same purpose. |
+| XML validation | `java -jar <skill-root>/runtime/miku-project-<version>.jar validate xml --in project.xml` | Not available as a direct Node.js command | Java validates XML directly. |
+| XML export | `java -jar <skill-root>/runtime/miku-project-<version>.jar export xml --in workbook.json --out project.xml` | `node <skill-root>/runtime/miku-project-<version>.mjs export xml --in workbook.json --out project.xml` | Same purpose. |
+| Structural XLSX export | `java -jar <skill-root>/runtime/miku-project-<version>.jar export xlsx --in workbook.json --out workbook.xlsx` | `node <skill-root>/runtime/miku-project-<version>.mjs export xlsx --in workbook.json --out workbook.xlsx` | Same purpose. |
+| Structural XLSX validation | `java -jar <skill-root>/runtime/miku-project-<version>.jar validate xlsx --in workbook.xlsx` | Not available as a direct Node.js command | Java validates workbook XLSX directly. |
+| Structural XLSX replace import | `java -jar <skill-root>/runtime/miku-project-<version>.jar import xlsx --in workbook.xlsx --out workbook.json` | `node <skill-root>/runtime/miku-project-<version>.mjs import xlsx --in workbook.xlsx --out workbook.json` | Both current `0.12.0` runtimes import XLSX; merge remains Java-only. |
+| Structural XLSX merge import | `java -jar <skill-root>/runtime/miku-project-<version>.jar merge xlsx --state workbook.json --in workbook.xlsx --out workbook.next.json` | Not available as a direct Node.js command | Java merges XLSX edits directly. |
+| Report bundle | `java -jar <skill-root>/runtime/miku-project-<version>.jar report all --in workbook.json --out report-bundle.zip` | `node <skill-root>/runtime/miku-project-<version>.mjs report all --in workbook.json --out report-bundle.zip` | Same purpose. |
+| Report directory | `java -jar <skill-root>/runtime/miku-project-<version>.jar report dir --in workbook.json --out report.dir` | Not available as a direct Node.js command | Java can write an unpacked report directory. |
+| WBS XLSX report | `java -jar <skill-root>/runtime/miku-project-<version>.jar report wbs-xlsx --in workbook.json --out wbs.xlsx` | `node <skill-root>/runtime/miku-project-<version>.mjs report wbs-xlsx --in workbook.json --out wbs.xlsx` | Same purpose. |
+| Daily SVG report | `java -jar <skill-root>/runtime/miku-project-<version>.jar report daily-svg --in workbook.json --out daily.svg` | `node <skill-root>/runtime/miku-project-<version>.mjs report daily-svg --in workbook.json --out daily.svg` | Same purpose. |
+| Weekly SVG report | `java -jar <skill-root>/runtime/miku-project-<version>.jar report weekly-svg --in workbook.json --out weekly.svg` | `node <skill-root>/runtime/miku-project-<version>.mjs report weekly-svg --in workbook.json --out weekly.svg` | Same purpose. |
+| Monthly SVG report | `java -jar <skill-root>/runtime/miku-project-<version>.jar report monthly-calendar-svg --in workbook.json --out monthly-calendar.zip` | `node <skill-root>/runtime/miku-project-<version>.mjs report monthly-calendar-svg --in workbook.json --out monthly-calendar.zip` | Same purpose. |
+| WBS Markdown report | `java -jar <skill-root>/runtime/miku-project-<version>.jar report wbs-markdown --in workbook.json --out wbs.md` | `node <skill-root>/runtime/miku-project-<version>.mjs report wbs-markdown --in workbook.json --out wbs.md` | Same purpose. |
+| Mermaid report | `java -jar <skill-root>/runtime/miku-project-<version>.jar report mermaid --in workbook.json --out mermaid.mmd` | `node <skill-root>/runtime/miku-project-<version>.mjs report mermaid --in workbook.json --out mermaid.mmd` | Same purpose. |
 
 Use `.xlsx` for visible XLSX files. Do not expose implementation-specific names
 such as `xlsxbin` in examples or outputs.

@@ -1,7 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-export const DEFAULT_RUNTIME_ROOT = "skills/igapyon-miku-project/runtime";
+export const DEFAULT_RUNTIME_ROOT = fileURLToPath(new URL("../runtime/", import.meta.url));
 
 const artifactDefinitions = {
   java: {
@@ -39,7 +40,10 @@ export function resolveRuntimeArtifact({
     throw new Error(`unsupported runtime artifact kind: ${kind}`);
   }
 
-  const entries = fs.existsSync(runtimeRoot) ? fs.readdirSync(runtimeRoot) : [];
+  const absoluteRuntimeRoot = path.resolve(runtimeRoot);
+  const entries = fs.existsSync(absoluteRuntimeRoot)
+    ? fs.readdirSync(absoluteRuntimeRoot)
+    : [];
   const matches = entries
     .map((name) => {
       const match = definition.pattern.exec(name);
@@ -48,7 +52,7 @@ export function resolveRuntimeArtifact({
       }
       return {
         name,
-        path: path.join(runtimeRoot, name),
+        path: path.resolve(absoluteRuntimeRoot, name),
         version: match[1]
       };
     })
@@ -56,7 +60,7 @@ export function resolveRuntimeArtifact({
     .sort(compareArtifacts);
 
   if (matches.length === 0) {
-    throw new Error(`missing ${definition.label} artifact in ${runtimeRoot}`);
+    throw new Error(`missing ${definition.label} artifact in ${absoluteRuntimeRoot}`);
   }
 
   return matches[matches.length - 1];

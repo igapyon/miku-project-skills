@@ -71,22 +71,30 @@ Examples:
 - `miku-project handoff-only として spec を出して`
 
 The latest explicit user policy in the active request wins over the skill
-configuration default. Do not infer a strict policy from backend names alone; `MCP でも使える?`
-is a capability question, not `mcp-only`. If multiple policy values appear in
-the same request, stop and ask which policy to use unless one is clearly being
+configuration default only within the backends allowed by the environment. An
+environment `cli-only`, `mcp-only`, or `handoff-only` is a hard constraint.
+Keep that effective constraint when a user's request asks for a preferred
+policy or a compatible strict policy. A request that explicitly requires a
+forbidden backend is a policy conflict; stop before inspecting or executing
+that backend and report the conflict. `handoff-only` may be selected by the user
+under a CLI- or MCP-allowed environment because it reduces execution.
+
+Do not infer a strict policy from backend names alone; `MCP でも使える?` is a
+capability question, not `mcp-only`. If multiple policy values appear in the
+same request, stop and ask which policy to use unless one is clearly being
 negated.
 
 For `cli-only` and `cli-preferred`, use this CLI runtime order:
 
 1. read this `SKILL.md`
-2. check versioned runtime artifacts matching `skills/igapyon-miku-project/runtime/miku-project-*.jar` and `skills/igapyon-miku-project/runtime/miku-project-*.mjs` first
+2. define `<skill-root>` as the absolute directory containing the loaded `SKILL.md`; check its `runtime/miku-project-*.jar` and `runtime/miku-project-*.mjs` first
 3. use the documented Java or Node CLI runtime flow if present
 4. only if that path is missing or unusable, search for alternatives
 
 For this repository:
 
-- prefer the newest `skills/igapyon-miku-project/runtime/miku-project-*.jar` for operations it supports
-- use the newest `skills/igapyon-miku-project/runtime/miku-project-*.mjs` when the Java runtime is missing or does not support the requested operation
+- prefer the newest `<skill-root>/runtime/miku-project-*.jar` for operations it supports
+- use the newest `<skill-root>/runtime/miku-project-*.mjs` when the Java runtime is missing or does not support the requested operation
 - do not search broadly through the workspace before checking the bundled runtime artifacts
 - do not conclude that runtime dependencies are missing until the bundled skill-local runtime path has also been checked when applicable
 - in `mcp-only`, do not probe CLI runtime artifacts just to see whether CLI fallback is possible

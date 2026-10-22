@@ -2,6 +2,19 @@
 
 `miku-project-skills` の MVP を実装するための作業分解です。
 
+## Agent Skills整合性修正計画（2026-10-23）
+
+状態: 実装・ローカル検証完了。計画は[Agent Skills整合性修正計画](docs/agent-skills-consistency-plan-2026-10-23.md)、実施結果は[実施記録](docs/agent-skills-consistency-execution-2026-10-23.md)を参照する。
+
+- [x] MPAS-00: repo内のlockfile依存関係と実装前baselineを確認する。
+- [x] MPAS-01: runtimeをインストール済みSkillの場所から解決し、別workspaceから検証する（レビュー指摘1）。
+- [x] MPAS-02: 対応済みoperationのregistry、selector、CLI argvをそろえる（指摘3）。
+- [x] MPAS-03: 環境の必須制約と利用者の希望を分け、strict policyの衝突を検出する（指摘4）。
+- [x] MPAS-04: 同梱0.12.0の能力表・Node XLSX import・関連文書を同期する（指摘5）。
+- [x] MPAS-05: 設置directory名と配布物内の参照を修正する（指摘6）。
+- [x] MPAS-06: 全体build、差分確認、実施記録を完了する。
+- [x] 指摘2のXML import実行経路不足を[Issue #77](https://github.com/igapyon/miku-project-skills/issues/77)へ登録した。今回の実装範囲から除外し、上記作業の完了条件に含めない。
+
 ## 1. MVP 仕様の明文化
 
 - [x] MVP の対象機能を 4 点に固定する

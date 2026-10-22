@@ -11,11 +11,11 @@ Accept either:
 
 Show the Java runtime path first:
 
-- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar state from-draft --in draft.editjson --out workbook.json`
+- `java -jar <skill-root>/runtime/miku-project-<version>.jar state from-draft --in draft.editjson --out workbook.json`
 
 Node.js runtime example:
 
-- `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs state from-draft --in draft.editjson --out workbook.json`
+- `node <skill-root>/runtime/miku-project-<version>.mjs state from-draft --in draft.editjson --out workbook.json`
 
 ## Required Kind
 

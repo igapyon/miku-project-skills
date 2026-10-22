@@ -8,11 +8,11 @@ This is different from the conversational handoff use case because the focus her
 
 Prefer the bundled runtime CLI commands:
 
-- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar state validate --in workbook.json`
-- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar state import --in workbook.json --out workbook.normalized.json`
-- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar state merge --state workbook.json --in workbook.patch.json --out workbook.next.json`
-- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar export workbook-json --in workbook.json --out workbook.normalized.json`
-- `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs export workbook-json --in workbook.json --out workbook.normalized.json`
+- `java -jar <skill-root>/runtime/miku-project-<version>.jar state validate --in workbook.json`
+- `java -jar <skill-root>/runtime/miku-project-<version>.jar state import --in workbook.json --out workbook.normalized.json`
+- `java -jar <skill-root>/runtime/miku-project-<version>.jar state merge --state workbook.json --in workbook.patch.json --out workbook.next.json`
+- `java -jar <skill-root>/runtime/miku-project-<version>.jar export workbook-json --in workbook.json --out workbook.normalized.json`
+- `node <skill-root>/runtime/miku-project-<version>.mjs export workbook-json --in workbook.json --out workbook.normalized.json`
 
 ## `workbook-import`
 

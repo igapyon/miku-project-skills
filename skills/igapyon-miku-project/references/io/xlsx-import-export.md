@@ -8,10 +8,11 @@ This reference is for the structural workbook `XLSX`, not `WBS XLSX`.
 
 Prefer the bundled runtime CLI commands:
 
-- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar export xlsx --in workbook.json --out workbook.xlsx`
-- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar import xlsx --in workbook.xlsx --out workbook.json`
-- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar merge xlsx --state workbook.json --in workbook.xlsx --out workbook.next.json`
-- `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs export xlsx --in workbook.json --out workbook.xlsx`
+- `java -jar <skill-root>/runtime/miku-project-<version>.jar export xlsx --in workbook.json --out workbook.xlsx`
+- `java -jar <skill-root>/runtime/miku-project-<version>.jar import xlsx --in workbook.xlsx --out workbook.json`
+- `java -jar <skill-root>/runtime/miku-project-<version>.jar merge xlsx --state workbook.json --in workbook.xlsx --out workbook.next.json`
+- `node <skill-root>/runtime/miku-project-<version>.mjs export xlsx --in workbook.json --out workbook.xlsx`
+- `node <skill-root>/runtime/miku-project-<version>.mjs import xlsx --in workbook.xlsx --out workbook.json`
 
 ## `xlsx-import`
 
@@ -24,7 +25,7 @@ Purpose:
 Processing order:
 
 1. accept `.xlsx` bytes
-2. for replace import, use the Java runtime `import xlsx` command
+2. for replace import, use the Java or Node.js runtime `import xlsx` command
 3. validate the resulting `ProjectModel` when useful
 4. export it with `workbookJson.exportDocument`
 5. return the resulting `mikuproject_workbook_json`

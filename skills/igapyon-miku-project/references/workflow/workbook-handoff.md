@@ -16,8 +16,8 @@ If you already have current state as `mikuproject_workbook_json`, return it dire
 
 If you need to regenerate current state from runtime input, use:
 
-- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar export workbook-json --in workbook.json --out workbook.normalized.json`
-- `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs export workbook-json --in workbook.json --out workbook.normalized.json`
+- `java -jar <skill-root>/runtime/miku-project-<version>.jar export workbook-json --in workbook.json --out workbook.normalized.json`
+- `node <skill-root>/runtime/miku-project-<version>.mjs export workbook-json --in workbook.json --out workbook.normalized.json`
 
 ## Preferred Behavior
 

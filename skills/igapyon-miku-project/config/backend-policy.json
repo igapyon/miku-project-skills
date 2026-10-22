@@ -19,6 +19,12 @@
     "skill-config",
     "repository-default"
   ],
+  "precedence_scope": "Preference order after applying hard constraints from environment-policy.",
+  "environment_constraints": {
+    "cli-only": ["cli"],
+    "mcp-only": ["mcp"],
+    "handoff-only": []
+  },
   "fallback_allowed": {
     "cli-only": false,
     "cli-preferred": true,

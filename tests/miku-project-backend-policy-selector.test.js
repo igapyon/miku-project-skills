@@ -102,4 +102,16 @@ describe("miku-project backend policy selector", () => {
     expect(wbsXlsxPlan.attemptedBackends).toEqual(["mcp"]);
     expect(wbsXlsxPlan.error).toBe(null);
   });
+
+  it("does not fall back when mcp-only selects a Java-only operation", () => {
+    for (const operation of ["xlsx-merge-import", "workbook-import", "workbook-merge-import"]) {
+      const plan = planBackendExecution({ policy: "mcp-only", operation });
+
+      expect(plan.mode).toBe("error");
+      expect(plan.selectedBackend).toBe(null);
+      expect(plan.attemptedBackends).toEqual(["mcp"]);
+      expect(plan.fallback).toBe(null);
+      expect(plan.error.reason).toBe("mcp_not_supported");
+    }
+  });
 });

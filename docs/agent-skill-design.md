@@ -128,7 +128,7 @@ MVP では、次の upstream runtime artifact を主要入口とする。
 Agent Skill は workflow layer として残し、実行面だけを backend policy で切り替える。
 
 既定値は `cli-preferred` とする。
-ただし、ユーザー指示、実行環境の制約、repo 設定がある場合はそれを優先する。
+環境の strict policy は hard constraint とし、ユーザー指定はその許可範囲内で解釈する。環境に strict policy がない場合は、ユーザー指定、skill設定、repository既定値の順に選ぶ。
 
 policy 値:
 
@@ -138,8 +138,8 @@ policy 値:
 - `mcp-preferred`: MCP backend を先に使い、許可されている場合だけ CLI へ fallback する
 - `handoff-only`: backend 実行を行わず、spec / JSON / 手順を visible handoff として返す
 
-`cli-only` と `mcp-only` は strict policy として扱う。
-選ばれた backend が使えない場合は、別 backend に逃げず、実行経路エラーとして返す。
+`cli-only`、`mcp-only`、`handoff-only` は strict policy として扱う。
+環境由来の strict policy がユーザー要求と対立する場合は `backend_policy_conflict` で実行前に停止する。選ばれた backend が使えない場合は、別 backend に逃げず、実行経路エラーとして返す。
 
 fallback が許可されていて実際に発生した場合は、どの backend からどの backend へ移ったか、
 および理由を短く返す。
