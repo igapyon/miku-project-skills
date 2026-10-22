@@ -13,7 +13,7 @@
 - MCP backend 利用設定: [mcp-backend-setup.md](./mcp-backend-setup.md)
 - backend switching 手動テスト: [backend-switching-manual-test.md](./backend-switching-manual-test.md)
 - miku-soft 標準の適用と正本: [miku-soft-reference.md](./miku-soft-reference.md)
-- upstream MCP tool surface 連絡メモ: [upstream-mikuproject-mcp-tool-surface-note.md](./upstream-mikuproject-mcp-tool-surface-note.md)
+- upstream MCP tool surface 連絡メモ: [upstream-miku-project-mcp-tool-surface-note.md](./upstream-miku-project-mcp-tool-surface-note.md)
 - upstream Java CLI 変更依頼（完了）: [upstream-miku-project-java-cli-request.md](./upstream-miku-project-java-cli-request.md)
 - upstream Java `ai export bundle` 追加依頼（完了）: [upstream-miku-project-java-ai-export-bundle-request.md](./upstream-miku-project-java-ai-export-bundle-request.md)
 - upstream AI-era CLI help contract 依頼: [upstream-miku-project-ai-era-cli-contract-request.md](./upstream-miku-project-ai-era-cli-contract-request.md)
@@ -36,14 +36,11 @@ Skillの参照資料は`SKILL.md`と`references/INDEX.md`から用途別にた�
 - `skills/igapyon-miku-project/runtime/miku-project-<version>.mjs`
 - `skills/igapyon-miku-project/runtime/miku-project-sources-<version>.tgz`
 
-更新時は upstream 側で artifact を生成して、該当する runtime artifact を差し替えます。
-Java runtime 更新時は `miku-project-<version>.jar` と `miku-project-sources-<version>.jar` を差し替えます。
-Node.js runtime 更新時は `miku-project-<version>.mjs` と `miku-project-sources-<version>.tgz` を差し替えます。
-upstream source tree をこのリポジトリに同期する運用は通常不要です。
-
-このリポジトリで一時的に upstream を取得して artifact を更新する場合は、
-repo 直下の `workplace/` を使います。`workplace/` はローカル作業用であり、
-通常の内容は Git 管理しません。
+現在のruntime pinはNode.jsとJavaの`0.12.0`です。
+Node.jsは`miku-project-0.12.0.mjs`と`miku-project-sources-0.12.0.tgz`、
+Javaは`miku-project-0.12.0.jar`と`miku-project-sources-0.12.0.jar`を同梱します。
+対応するRelease assetとSHA-256は
+[`artifact-provenance.md`](../skills/igapyon-miku-project/references/runtime/artifact-provenance.md)に記録しています。
 
 ## バージョン更新
 
@@ -117,39 +114,15 @@ miku-project/
 npm run update:runtime
 ```
 
-フルビルドや runtime artifact 更新を行う前には、`workplace/upstream/` 以下の
-`miku-project` と `miku-project-java` について、最新 clone または pull が必要かを確認します。
-未取得または古い可能性がある場合は、先に upstream を更新してから artifact 生成と bundle build を行います。
+`npm run update:runtime`はupstream sourceをclone/buildせず、
+`scripts/update-miku-project-runtime.sh`に固定されたRelease tagの4 assetをdownloadし、
+`artifact-provenance.md`と対応するSHA-256を照合して差し替えます。
+その後、Java / Node.jsの`ai spec`と`--version`を実行します。
+現在はNode.jsとJavaそれぞれの`v0.12.0`を取得します。
 
-このコマンドは次を行います。
-
-- `workplace/upstream/miku-project` に `miku-project` を clone または更新する
-- `workplace/upstream/miku-project-java` に `miku-project-java` を clone または更新する
-- Node.js 側で `bundle/miku-project.mjs` を生成する
-- Node.js 側で `bundle/miku-project-sources.tgz` を生成する
-- Java 側で `target/miku-project.jar` を生成する
-- Java 側で `target/miku-project-sources.jar` を生成する
-- 生成物を version 付き名で `skills/igapyon-miku-project/runtime/` にコピーする
-- コピー後の `miku-project-<version>.jar` と `miku-project-<version>.mjs` を smoke test する
-
-既定の取得元と ref:
-
-- `miku-project`: `https://github.com/igapyon/miku-project.git` の `devel`
-- `miku-project-java`: `https://github.com/igapyon/miku-project-java.git` の `devel`
-
-必要に応じて環境変数で変更できます。
-
-```bash
-MIKUPROJECT_REF=main MIKUPROJECT_JAVA_REF=main npm run update:runtime
-```
-
-runtime artifact のファイル名 version は、既定では Node.js runtime の
-`--version` 出力から決めます。配布番号など別の version 付き名にしたい場合は
-`MIKUPROJECT_RUNTIME_VERSION` を指定します。
-
-```bash
-MIKUPROJECT_RUNTIME_VERSION=0.8.3.3 npm run update:runtime
-```
+Release tag、asset名、checksumはscript内の定数です。
+`MIKUPROJECT_REF`、`MIKUPROJECT_JAVA_REF`、`MIKUPROJECT_RUNTIME_VERSION`による変更には対応していません。
+runtime pinを更新する場合は、upstream Releaseのassetを確認してscriptとprovenanceを一緒に更新し、artifactを照合してから実行してください。
 
 ## 配布と Release
 
@@ -174,8 +147,8 @@ skill-local 設定:
 
 - `skills/igapyon-miku-project/config/backend-policy.json`
 - bundle に同梱し、既定 policy、許可 policy、strict policy、fallback 可否を機械可読に記録する
-- 優先順位は `user-request`、`environment-policy`、`skill-config`、`repository-default`
-- ユーザー明示指示や実行環境 policy と衝突する場合、設定ファイル側を優先しない
+- `precedence`は環境制約適用後の希望順位で、環境の`cli-only` / `mcp-only` / `handoff-only`はhard constraint
+- 制約内では `user-request`、`environment-policy`、`skill-config`、`repository-default` の順で選ぶ。禁止backendをユーザー指定された場合は`backend_policy_conflict`で停止する
 
 policy selector:
 

@@ -42,7 +42,7 @@
 
 skill bundle には `skills/igapyon-miku-project/config/backend-policy.json` が含まれます。
 このファイルは skill 側の既定 policy と許可値を記録するためのものです。
-ユーザーの明示指示と実行環境 policy が優先で、設定ファイルはそれらより下位です。
+環境の `cli-only` / `mcp-only` / `handoff-only` は実行上の制約です。ユーザー指定はその制約内で有効になり、設定ファイルとrepository既定値はその後に参照します。
 
 主な使い分け:
 
@@ -52,7 +52,7 @@ skill bundle には `skills/igapyon-miku-project/config/backend-policy.json` が
 - `mcp-preferred`: MCP を先に使い、許可されている場合だけ CLI へ fallback したい環境向け
 - `handoff-only`: CLI も MCP も実行せず、spec / JSON / 手順だけを受け渡したい環境向け
 
-`cli-only` と `mcp-only` は strict policy です。
+`cli-only`、`mcp-only`、`handoff-only` は strict policy です。環境から適用された場合は、ユーザー指定でも禁止backendを許可しません。利用者が実行方式として禁止backendを明示した場合は、実行前にpolicy conflictとして停止します。
 選んだ backend が使えない場合、別 backend へ自動 fallback せず、実行経路エラーとして扱います。
 
 MCP backend を使う場合の server product 名は `mikuproject-mcp` です。
@@ -101,13 +101,13 @@ npm run build:bundle
 ```text
 bundle/miku-project-skills/
   skills/
-    miku-project/
+    igapyon-miku-project/
       runtime/
         miku-project-<version>.jar
         miku-project-<version>.mjs
 ```
 
-その中身を skill home にコピーします。
+展開した `skills/igapyon-miku-project/` directoryを、各Skill directoryを直接置く installed skills root の `igapyon-miku-project/` へコピーします。詳しくは [skill-installation.md](./skill-installation.md) を参照してください。
 
 zip が欲しい場合は次も使えます。
 

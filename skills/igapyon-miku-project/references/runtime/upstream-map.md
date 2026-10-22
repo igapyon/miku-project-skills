@@ -23,11 +23,11 @@ Use this reference when you need the exact `miku-project` runtime locations behi
 
 Check these skill-local runtime artifacts before broad repository exploration:
 
-- `skills/igapyon-miku-project/runtime/miku-project-<version>.jar`
-- `skills/igapyon-miku-project/runtime/miku-project-<version>.mjs`
+- `<skill-root>/runtime/miku-project-<version>.jar`
+- `<skill-root>/runtime/miku-project-<version>.mjs`
 
 `<version>` is a placeholder for the bundled runtime artifact version.
-Use the actual file name in `skills/igapyon-miku-project/runtime/`.
+Use the actual file name in `<skill-root>/runtime/`.
 
 When both are present, prefer the Java runtime for operations it supports. Use the Node.js runtime when the Java runtime is missing or does not support the requested operation.
 
@@ -36,18 +36,18 @@ When both are present, prefer the Java runtime for operations it supports. Use t
 Java runtime:
 
 ```bash
-java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar ai spec
-java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar state from-draft --in draft.editjson --out workbook.json
-java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar report all --in workbook.json --out report-bundle.zip
+java -jar <skill-root>/runtime/miku-project-<version>.jar ai spec
+java -jar <skill-root>/runtime/miku-project-<version>.jar state from-draft --in draft.editjson --out workbook.json
+java -jar <skill-root>/runtime/miku-project-<version>.jar report all --in workbook.json --out report-bundle.zip
 ```
 
 Node.js runtime:
 
 ```bash
-node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs ai spec
-node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs state from-draft --in draft.editjson --out workbook.json
-node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs state apply-patch --state workbook.json --in patch.editjson --out workbook.next.json
-node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs report all --in workbook.json --out report-bundle.zip
+node <skill-root>/runtime/miku-project-<version>.mjs ai spec
+node <skill-root>/runtime/miku-project-<version>.mjs state from-draft --in draft.editjson --out workbook.json
+node <skill-root>/runtime/miku-project-<version>.mjs state apply-patch --state workbook.json --in patch.editjson --out workbook.next.json
+node <skill-root>/runtime/miku-project-<version>.mjs report all --in workbook.json --out report-bundle.zip
 ```
 
 ## Main Formats
@@ -57,7 +57,7 @@ node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs report all -
   - Node CLI: workbook-state commands such as `export xml`
 - workbook `XLSX`
   - Java CLI: `export xlsx`, `import xlsx`, `merge xlsx`
-  - Node CLI: `export xlsx`
+  - Node CLI: `export xlsx`, `import xlsx`
 - `project_draft_view`
   - Java CLI: `state from-draft`
   - Node CLI: `state from-draft`

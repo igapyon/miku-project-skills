@@ -5,7 +5,7 @@ topics: [miku-project, cli, upstream, help]
 category: upstream-request
 status: pending
 audience: [upstream-maintainer]
-updated: 2026-08-06
+updated: 2026-10-23
 sources:
   - type: runtime-artifact
     role: primary
@@ -18,9 +18,19 @@ sources:
 
 対象: `miku-project` Node.js CLI と `miku-project-java` CLI。
 
-同梱 `0.8.3.3` artifact の `--help` は実行可能な usage 一覧を返すが、
+依頼作成時に確認した同梱 `0.8.3.3` artifact の `--help` は実行可能な usage 一覧を返すが、
 AI agent と人間が安全に選択できる command contract としては情報が不足している。
 この Agent Skill 側で CLI を再実装せず、upstream の CLI contract として改善を希望する。
+
+## Current artifact note (2026-10-23)
+
+The pinned Node.js and Java runtime artifacts are now `0.12.0`. Their
+top-level help output is checked by
+[`help-compatibility.json`](../skills/igapyon-miku-project/references/runtime/help-compatibility.json).
+Both currently expose `import xlsx`; the Java runtime additionally exposes
+`merge xlsx`. The original `0.8.3.3` statement above describes the artifact
+checked when this request was written. This request remains pending because
+the broader command-specific help contract has not been verified as complete.
 
 要求する最小項目:
 

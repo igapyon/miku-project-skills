@@ -9,12 +9,12 @@ Require an existing `mikuproject_workbook_json` as the base state.
 
 Show the Java runtime path first:
 
-- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar ai validate-patch --state workbook.json --in patch.editjson`
-- `java -jar skills/igapyon-miku-project/runtime/miku-project-<version>.jar state apply-patch --state workbook.json --in patch.editjson --out workbook.next.json`
+- `java -jar <skill-root>/runtime/miku-project-<version>.jar ai validate-patch --state workbook.json --in patch.editjson`
+- `java -jar <skill-root>/runtime/miku-project-<version>.jar state apply-patch --state workbook.json --in patch.editjson --out workbook.next.json`
 
 Node.js runtime example:
 
-- `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs state apply-patch --state workbook.json --in patch.editjson --out workbook.next.json`
+- `node <skill-root>/runtime/miku-project-<version>.mjs state apply-patch --state workbook.json --in patch.editjson --out workbook.next.json`
 
 ## Acceptance Rule
 
@@ -25,7 +25,7 @@ Accept either:
 
 For validation through the Node.js runtime:
 
-- `node skills/igapyon-miku-project/runtime/miku-project-<version>.mjs ai validate-patch --state workbook.json --in patch.editjson`
+- `node <skill-root>/runtime/miku-project-<version>.mjs ai validate-patch --state workbook.json --in patch.editjson`
 
 ## Required Kind
 
