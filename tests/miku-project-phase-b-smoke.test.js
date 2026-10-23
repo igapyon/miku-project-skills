@@ -37,6 +37,8 @@ describe("miku-project file workflow smoke", () => {
     const javaXlsxPath = path.resolve(tempRoot, "java-project.xlsx");
     const nodeImportedWorkbookPath = path.resolve(tempRoot, "node-imported-workbook.json");
     const javaImportedWorkbookPath = path.resolve(tempRoot, "java-imported-workbook.json");
+    const nodeImportedJavaXlsxPath = path.resolve(tempRoot, "node-imported-java-xlsx.json");
+    const javaImportedNodeXlsxPath = path.resolve(tempRoot, "java-imported-node-xlsx.json");
     const markdownPath = path.resolve(tempRoot, "wbs.md");
     fs.writeFileSync(draftPath, `${JSON.stringify(buildDraft(), null, 2)}\n`, "utf8");
 
@@ -125,17 +127,39 @@ describe("miku-project file workflow smoke", () => {
       "--out",
       javaImportedWorkbookPath
     ], { cwd: tempRoot, encoding: "utf8" });
+    execFileSync("node", [
+      nodeRuntimePath,
+      "import",
+      "xlsx",
+      "--in",
+      javaXlsxPath,
+      "--out",
+      nodeImportedJavaXlsxPath
+    ], { cwd: tempRoot, encoding: "utf8" });
+    execFileSync("java", [
+      "-jar",
+      javaRuntimePath,
+      "import",
+      "xlsx",
+      "--in",
+      xlsxPath,
+      "--out",
+      javaImportedNodeXlsxPath
+    ], { cwd: tempRoot, encoding: "utf8" });
 
-    for (const importedPath of [nodeImportedWorkbookPath, javaImportedWorkbookPath]) {
+    for (const importedPath of [
+      nodeImportedWorkbookPath,
+      javaImportedWorkbookPath,
+      nodeImportedJavaXlsxPath,
+      javaImportedNodeXlsxPath
+    ]) {
       const imported = JSON.parse(fs.readFileSync(importedPath, "utf8"));
       expect(imported.format).toBe("mikuproject_workbook_json");
       expect(imported.sheets.Project).toContainEqual({ Field: "Name", Value: "File Workflow Smoke" });
       expect(imported.sheets.Tasks.map((task) => task.Name)).toEqual(["Planning", "Review"]);
+      expect(imported.sheets.Tasks[1].Milestone).toBe("○");
+      expect(imported.sheets.Tasks[1].Predecessors).toBe("1");
     }
-    expect(JSON.parse(fs.readFileSync(nodeImportedWorkbookPath, "utf8")).sheets.Tasks[1].Predecessors)
-      .toBe("1");
-    expect(JSON.parse(fs.readFileSync(javaImportedWorkbookPath, "utf8")).sheets.Tasks[1].Predecessors)
-      .toBe("1");
 
     execFileSync("node", [
       nodeRuntimePath,

@@ -4,6 +4,16 @@ Use this reference when the user wants to move between workbook `XLSX` and the c
 
 This reference is for the structural workbook `XLSX`, not `WBS XLSX`.
 
+## Runtime Interoperability
+
+Checked with the bundled Node.js and Java `1.1.2` runtimes on 2026-10-23:
+same-runtime and cross-runtime export/import preserved the fixture's task
+predecessor. The saved `0.12.0` Node export imported by the `0.12.0` Java
+runtime lost that predecessor; this regression did not reproduce with the
+current `1.1.2` artifacts. Imported date-time strings are formatted differently
+by the runtimes (Node uses a space and Java uses `T`); compare their meaning,
+not serialized string equality.
+
 ## Runtime Commands
 
 Prefer the bundled runtime CLI commands:

@@ -36,9 +36,9 @@ Skillの参照資料は`SKILL.md`と`references/INDEX.md`から用途別にた�
 - `skills/igapyon-miku-project/runtime/miku-project-<version>.mjs`
 - `skills/igapyon-miku-project/runtime/miku-project-sources-<version>.tgz`
 
-現在のruntime pinはNode.jsとJavaの`0.12.0`です。
-Node.jsは`miku-project-0.12.0.mjs`と`miku-project-sources-0.12.0.tgz`、
-Javaは`miku-project-0.12.0.jar`と`miku-project-sources-0.12.0.jar`を同梱します。
+現在のruntime pinはNode.jsとJavaの`1.1.2`です。
+Node.jsは`miku-project-1.1.2.mjs`と`miku-project-sources-1.1.2.tgz`、
+Javaは`miku-project-1.1.2.jar`と`miku-project-sources-1.1.2.jar`を同梱します。
 対応するRelease assetとSHA-256は
 [`artifact-provenance.md`](../skills/igapyon-miku-project/references/runtime/artifact-provenance.md)に記録しています。
 
@@ -53,13 +53,13 @@ Node.js 20 以降を対応対象とします。CI は Node.js 20 / 24 と Java 1
 更新には `npm version` を使います。
 Git tag は別途作成するため、通常は `--no-git-tag-version` を付けます。
 
-例:
+次回のpatch releaseを`1.1.3`にする場合の例:
 
 ```bash
-npm version 0.12.3 --no-git-tag-version
+npm version 1.1.3 --no-git-tag-version
 ```
 
-`package.json` と `package-lock.json` では npm の SemVer として `0.12.3`
+`package.json` と `package-lock.json` では npm の SemVer として `1.1.3`
 のように記録します。Git tag やリリース名として `v0.12.3` を使う場合でも、
 package version には先頭の `v` を付けません。
 
@@ -69,7 +69,10 @@ package version には先頭の `v` を付けません。
 node -e 'const p=require("./package.json"); const l=require("./package-lock.json"); console.log({package:p.version, lock:l.version, root:l.packages[""].version})'
 ```
 
-同梱 CLI runtime の version は `miku-project-skills` の package version とは別です。
+Skill package version は独立したリリース番号として管理しますが、miku-softの運用では、
+同梱CLI runtimeのversionにおおよそ追従させます。runtime更新とSkillの互換性・配布確認を
+同じreleaseで完了する場合、runtimeに近いversionをpackageにも採用できます。複数runtimeの
+versionが揃わない場合は、適合対象とpackage versionの判断を記録します。
 runtime artifact を差し替えた場合、または release note で runtime version を書く場合は、
 次で確認します。
 
@@ -118,7 +121,7 @@ npm run update:runtime
 `scripts/update-miku-project-runtime.sh`に固定されたRelease tagの4 assetをdownloadし、
 `artifact-provenance.md`と対応するSHA-256を照合して差し替えます。
 その後、Java / Node.jsの`ai spec`と`--version`を実行します。
-現在はNode.jsとJavaそれぞれの`v0.12.0`を取得します。
+現在はNode.jsとJavaそれぞれの`v1.1.2`を取得します。
 
 Release tag、asset名、checksumはscript内の定数です。
 `MIKUPROJECT_REF`、`MIKUPROJECT_JAVA_REF`、`MIKUPROJECT_RUNTIME_VERSION`による変更には対応していません。

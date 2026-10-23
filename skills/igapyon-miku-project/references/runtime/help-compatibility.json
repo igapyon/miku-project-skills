@@ -1,31 +1,82 @@
 {
   "format": "miku-project-runtime-help-compatibility",
   "version": 1,
-  "nodeArtifactVersion": "0.12.0",
-  "javaArtifactVersion": "0.12.0",
+  "nodeArtifactVersion": "1.1.2",
+  "javaArtifactVersion": "1.1.2",
   "comparison": "documented-similarity",
   "sharedFragments": [
     "--version",
     "ai spec",
     "ai detect-kind",
     "ai export project-overview",
+    "ai export task-edit",
+    "ai export phase-detail",
+    "ai export bundle",
+    "ai validate-patch",
     "state from-draft",
     "state apply-patch",
+    "state summarize",
     "state diff",
     "import xlsx",
     "export workbook-json",
+    "export xml",
+    "export xlsx",
     "report all",
+    "report wbs-xlsx",
+    "report daily-svg",
+    "report weekly-svg",
+    "report monthly-calendar-svg",
+    "report wbs-markdown",
     "report mermaid"
   ],
+  "sharedOptionsByCommand": {
+    "ai spec": ["--out"],
+    "ai export project-overview": ["--in", "--out"],
+    "ai export task-edit": ["--in", "--task-uid", "--select", "--out"],
+    "ai export phase-detail": ["--in", "--phase-uid", "--select", "--mode", "--max-depth", "--out"],
+    "ai export bundle": ["--in", "--out"],
+    "ai detect-kind": ["--in", "--out"],
+    "ai validate-patch": ["--state", "--in", "--out"],
+    "state from-draft": ["--in", "--out"],
+    "state apply-patch": ["--state", "--in", "--out"],
+    "state summarize": ["--in"],
+    "state diff": ["--before", "--after", "--out"],
+    "import xlsx": ["--in", "--out"],
+    "export workbook-json": ["--in", "--out"],
+    "export xml": ["--in", "--out"],
+    "export xlsx": ["--in", "--out"],
+    "report all": ["--in", "--out"],
+    "report wbs-xlsx": ["--in", "--out"],
+    "report daily-svg": ["--in", "--out"],
+    "report weekly-svg": ["--in", "--out"],
+    "report monthly-calendar-svg": ["--in", "--out"],
+    "report wbs-markdown": ["--in", "--out"],
+    "report mermaid": ["--in", "--out"]
+  },
+  "runtimeSpecificUsage": {
+    "ai export phase-detail": {
+      "node": "--max-depth 2 (0-100)",
+      "java": "--max-depth 0..100"
+    },
+    "ai validate-patch": {
+      "node": "report.json",
+      "java": "validation.txt"
+    }
+  },
   "javaOnlyFragments": [
     "state validate --in workbook.json",
     "state import --in workbook.json",
     "state merge --state workbook.json",
-    "validate xml --in project.xml"
+    "validate xml --in project.xml",
+    "validate xlsx --in workbook.xlsx",
+    "merge xlsx --state workbook.json",
+    "report dir --in workbook.json"
   ],
   "nodeOnlyFragments": [],
   "knownLimitations": [
-    "Node.js and Java runtimes are both pinned to their separately published v0.12.0 Releases.",
+    "Node.js and Java runtimes are pinned to their separately published v1.1.2 Releases.",
+    "Node and Java use documented-similarity help contracts; phase-detail depth notation and validate-patch output-name examples differ.",
+    "Imported XLSX date-time values use runtime-specific string formatting; compare date-time meaning rather than serialized strings.",
     "The legacy `mikuproject_*` MCP identifiers are not a CLI runtime identifier and remain a documented compatibility contract."
   ]
 }

@@ -35,10 +35,10 @@ describe("miku-project naming contract", () => {
 
   it("contains only the fixed canonical runtime artifact names", () => {
     expect(fs.readdirSync(path.resolve(skillRoot, "runtime")).filter((entry) => entry !== ".DS_Store").sort()).toEqual([
-      "miku-project-0.12.0.jar",
-      "miku-project-0.12.0.mjs",
-      "miku-project-sources-0.12.0.jar",
-      "miku-project-sources-0.12.0.tgz"
+      "miku-project-1.1.2.jar",
+      "miku-project-1.1.2.mjs",
+      "miku-project-sources-1.1.2.jar",
+      "miku-project-sources-1.1.2.tgz"
     ]);
   });
 
@@ -54,7 +54,7 @@ describe("miku-project naming contract", () => {
   });
 
   it("records the runtime versions actually bundled by the canonical skill", () => {
-    expect(mikuSoftReference).toContain("Node.js\n  `0.12.0` と Java `0.12.0` artifact");
+    expect(mikuSoftReference).toContain("Node.js\n  `1.1.2` と Java `1.1.2` artifact");
     expect(mikuSoftReference).not.toContain("`0.8.3.3` artifact");
   });
 });
