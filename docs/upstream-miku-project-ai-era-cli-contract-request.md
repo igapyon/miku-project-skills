@@ -24,11 +24,14 @@ AI agent と人間が安全に選択できる command contract としては情�
 
 ## Current artifact note (2026-10-23)
 
-The pinned Node.js and Java runtime artifacts are now `0.12.0`. Their
+The pinned Node.js and Java runtime artifacts are now `1.1.2`. Their
 top-level help output is checked by
 [`help-compatibility.json`](../skills/igapyon-miku-project/references/runtime/help-compatibility.json).
 Both currently expose `import xlsx`; the Java runtime additionally exposes
-`merge xlsx`. The original `0.8.3.3` statement above describes the artifact
+`merge xlsx`. The v1.1.2 help also documents `--out` for `ai spec`,
+`ai detect-kind`, `ai validate-patch`, and `state diff`, and the
+`ai export phase-detail --max-depth` range of 0 through 100. The original
+`0.8.3.3` statement above describes the artifact
 checked when this request was written. This request remains pending because
 the broader command-specific help contract has not been verified as complete.
 

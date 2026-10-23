@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import crypto from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 
@@ -96,6 +97,25 @@ describe("miku-project bundle smoke", () => {
     fs.writeFileSync(path.resolve(workspaceRuntimeRoot, "miku-project-99.0.0.mjs"), "impostor");
 
     const installedRuntimeRoot = path.resolve(installedSkillRoot, "runtime");
+    const expectedRuntimeFiles = [
+      "miku-project-1.1.2.jar",
+      "miku-project-1.1.2.mjs",
+      "miku-project-sources-1.1.2.jar",
+      "miku-project-sources-1.1.2.tgz"
+    ];
+    const archivedRuntimeFiles = archiveEntries
+      .filter((entry) =>
+        entry.startsWith("skills/igapyon-miku-project/runtime/") && !entry.endsWith("/"))
+      .map((entry) => path.posix.basename(entry))
+      .sort();
+    expect(archivedRuntimeFiles).toEqual(expectedRuntimeFiles);
+    expect(fs.readdirSync(installedRuntimeRoot).filter((entry) => entry !== ".DS_Store").sort())
+      .toEqual(expectedRuntimeFiles);
+    for (const fileName of expectedRuntimeFiles) {
+      const sourceBytes = fs.readFileSync(path.resolve(ROOT, "skills/igapyon-miku-project/runtime", fileName));
+      const installedBytes = fs.readFileSync(path.resolve(installedRuntimeRoot, fileName));
+      expect(sha256(installedBytes), `installed ${fileName}`).toBe(sha256(sourceBytes));
+    }
     const isolatedNodeRuntimePath = resolveRuntimeArtifactPath({
       kind: "node",
       runtimeRoot: installedRuntimeRoot
@@ -196,14 +216,14 @@ describe("miku-project bundle smoke", () => {
       JSON.parse(fs.readFileSync(sourcePolicyConfigPath, "utf8"))
     );
     expect(nodeHelp).toContain("miku-project report all");
-    expect(nodeVersion).toMatch(/^miku-project \d+\.\d+\.\d+/);
+    expect(nodeVersion).toBe("miku-project 1.1.2\n");
     expect(javaHelp).toContain("ai spec");
-    expect(javaVersion).toMatch(/^miku-project \d+\.\d+\.\d+/);
+    expect(javaVersion).toBe("miku-project 1.1.2\n");
     expect(invocations.nodePath).toBe(
-      fs.realpathSync(path.resolve(installedRuntimeRoot, "miku-project-0.12.0.mjs"))
+      fs.realpathSync(path.resolve(installedRuntimeRoot, "miku-project-1.1.2.mjs"))
     );
     expect(invocations.javaPath).toBe(
-      fs.realpathSync(path.resolve(installedRuntimeRoot, "miku-project-0.12.0.jar"))
+      fs.realpathSync(path.resolve(installedRuntimeRoot, "miku-project-1.1.2.jar"))
     );
     expect(invocations.nodePath).not.toContain(workspace);
     expect(invocations.draft.args[0]).toBe(invocations.nodePath);
@@ -215,6 +235,10 @@ describe("miku-project bundle smoke", () => {
     expect(fs.existsSync(path.resolve(installedSkillRoot, "workbook.json"))).toBe(false);
   }, 30_000);
 });
+
+function sha256(bytes) {
+  return crypto.createHash("sha256").update(bytes).digest("hex");
+}
 
 function buildDraft() {
   return {

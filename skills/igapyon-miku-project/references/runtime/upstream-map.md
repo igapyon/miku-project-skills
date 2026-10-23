@@ -5,14 +5,14 @@ topics: [miku-project, runtime, upstream]
 category: reference
 status: active
 audience: [agent, maintainer]
-updated: 2026-08-09
+updated: 2026-10-23
 sources:
   - type: runtime-artifact
     role: primary
     path: skills/igapyon-miku-project/runtime/
-    node_version: 0.12.0
-    java_version: 0.12.0
-    checked: 2026-08-09
+    node_version: 1.1.2
+    java_version: 1.1.2
+    checked: 2026-10-23
 ---
 
 # Upstream Runtime Map

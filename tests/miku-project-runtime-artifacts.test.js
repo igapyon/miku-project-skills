@@ -27,10 +27,10 @@ describe("miku-project runtime artifact paths", () => {
   it("uses an absolute Skill-relative default and returns absolute artifact paths", () => {
     expect(path.isAbsolute(DEFAULT_RUNTIME_ROOT)).toBe(true);
     expect(resolveRuntimeArtifactPath({ kind: "java" })).toBe(
-      path.resolve(DEFAULT_RUNTIME_ROOT, "miku-project-0.12.0.jar")
+      path.resolve(DEFAULT_RUNTIME_ROOT, "miku-project-1.1.2.jar")
     );
     expect(resolveRuntimeArtifactPath({ kind: "node" })).toBe(
-      path.resolve(DEFAULT_RUNTIME_ROOT, "miku-project-0.12.0.mjs")
+      path.resolve(DEFAULT_RUNTIME_ROOT, "miku-project-1.1.2.mjs")
     );
   });
 
@@ -89,8 +89,8 @@ describe("miku-project runtime artifact paths", () => {
       encoding: "utf8"
     }));
 
-    expect(result.node).toBe(path.resolve(DEFAULT_RUNTIME_ROOT, "miku-project-0.12.0.mjs"));
-    expect(result.java).toBe(path.resolve(DEFAULT_RUNTIME_ROOT, "miku-project-0.12.0.jar"));
+    expect(result.node).toBe(path.resolve(DEFAULT_RUNTIME_ROOT, "miku-project-1.1.2.mjs"));
+    expect(result.java).toBe(path.resolve(DEFAULT_RUNTIME_ROOT, "miku-project-1.1.2.jar"));
     expect(result.invocation.args[0]).toBe(result.node);
     expect(result.node).not.toContain(tempRoot);
     expect(fs.existsSync(result.node)).toBe(true);

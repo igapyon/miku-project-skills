@@ -4,15 +4,15 @@
 
 ## Node.js / Java runtime v1.1.2取り込み計画（2026-10-23）
 
-状態: 計画のみ。実装は未着手。[取り込み計画](docs/runtime-v1.1.2-intake-plan-2026-10-23.md)に固定asset・digest、変更対象、検証command、受入条件を記録した。
+状態: 実装・ローカル検証完了。Node.js 20 / 24のGitHub Actions確認待ち。[取り込み計画](docs/runtime-v1.1.2-intake-plan-2026-10-23.md)と[実施記録](docs/runtime-v1.1.2-intake-execution-2026-10-23.md)を参照。
 
-- [ ] R112-00: 開始状態と同梱0.12.0のbaselineを保存する。
-- [ ] R112-01: Node / Javaの固定Release v1.1.2のCLI・sources計4 assetとpinを更新する。
-- [ ] R112-02: version、provenance、help互換性の回帰確認を合わせる。
-- [ ] R112-03: 両runtimeで既存Skill workflow、helperの実argv、CLI optionを確認する。
-- [ ] R112-04: XLSXのruntime内・異runtime間交換とreportを確認し、既知差を再評価する。
-- [ ] R112-05: active文書、Skill package 0.12.5、最終ZIPの内容と実バイトを同期する。
-- [ ] R112-06-local: 全体build、差分確認、実施記録を完了する。
+- [x] R112-00: 開始状態と同梱0.12.0のbaselineを保存する。
+- [x] R112-01: Node / Javaの固定Release v1.1.2のCLI・sources計4 assetとpinを更新する。
+- [x] R112-02: version、provenance、help互換性の回帰確認を合わせる。
+- [x] R112-03: 両runtimeで既存Skill workflow、helperの実argv、CLI optionを確認する。
+- [x] R112-04: XLSXのruntime内・異runtime間交換とreportを確認し、既知差を再評価する。
+- [x] R112-05: active文書、Skill package 1.1.2、最終ZIPの内容と実バイトを同期する。
+- [x] R112-06-local: 全体build、差分確認、実施記録を完了する。
 - [ ] R112-06-ci: 既存GitHub ActionsのNode 20 / 24 + Java 17で最終受入を確認する。
 
 XML import不足のIssue #77、新v1 workflowへの移行、MCP契約変更は今回の対象外。ローカルのNode版が異なっても確認を進め、対応版の最終確認は既存CIで行う。

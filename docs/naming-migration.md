@@ -62,7 +62,7 @@ identity.
 | `mikuproject_*` and `mikuproject://` | MCP backend tools and resource URIs; retain until the MCP backend migration supplies and tests canonical identifiers. |
 | `mikuproject_workbook_json` | Existing workbook interchange format; retain until its wire-format migration is separately versioned. |
 | `igapyon/mikuproject-mcp` and `@igapyon/mikuproject-mcp-node` | Current MCP backend repository and package; their migration is tracked by umbrella Issue #123, but this adapter retains them until the upstream MCP repository supplies and tests canonical identifiers. |
-| Java runtime | Pinned to the published `v0.12.0` artifact, whose `ai spec` uses the canonical `miku-project` heading. |
+| Java runtime | The migration baseline used the published `v0.12.0` artifact, whose `ai spec` uses the canonical `miku-project` heading. Current runtime pins are recorded in [`artifact-provenance.md`](../skills/igapyon-miku-project/references/runtime/artifact-provenance.md). |
 
 All other repository, package, directory, bundle, runtime, documentation, and
 Action references use the canonical miku-project identity. The exact upstream

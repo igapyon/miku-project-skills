@@ -1,14 +1,14 @@
 ---
 title: Node.js / Java runtime v1.1.2取り込み計画
 description: 固定Releaseの4 assetを取り込み、既存CLIの互換性、XLSX交換、provenanceと配布物を確認する実装手順。
-status: planned
+status: implemented-local-pending-ci
 created: 2026-10-23
 updated: 2026-10-23
 ---
 
 # Node.js / Java runtime v1.1.2取り込み計画
 
-利用者の「対応を計画して。実装はまだ」に基づく計画。実装担当が作業順、変更対象、検証、停止条件を判断できる粒度で記録する。この計画の作成時点では、runtime、script、Skill、tests、package versionは変更していない。
+利用者の「対応を計画して。実装はまだ」に基づき作成し、後続の「実装して」の指示を受けて実施した計画。実施内容・結果は[実施記録](runtime-v1.1.2-intake-execution-2026-10-23.md)を参照する。ローカル実装・検証は完了し、Node.js 20 / 24のGitHub Actions結果が未確認のため、その受入だけ保留中。
 
 ## 1. 目的と対象範囲
 
@@ -18,8 +18,8 @@ updated: 2026-10-23
 | --- | --- |
 | repository | `igapyon/miku-project-skills` |
 | branch / HEAD | `devel-tiga1023hee` / `d419a2300b879561c01c5c1be48a1ab19c6deaa8` |
-| 開始時のworktree | clean。実装開始時に再確認する |
-| Skill package version | 現在`0.12.4`。既存操作を保つruntime更新として次版`0.12.5`を予定する |
+| 開始時のworktree | 計画作成時はclean。実装開始時は計画 / version関連の既存変更があり、保持した |
+| Skill package version | 計画作成時は`0.12.4`。実施ではmiku-softの近似追従方針に沿って`1.1.2`を採用した |
 | Node.js / Java runtime | 両方`0.12.0` → 両方`1.1.2` |
 | installable Skill | `skills/igapyon-miku-project/` |
 | 対応Node.js | 現在の`>=20`を維持する計画。20で動かない場合は受入を止める |
@@ -40,7 +40,7 @@ updated: 2026-10-23
 - 新helpには`ai spec`、`ai detect-kind`、`ai validate-patch`、`state diff`の`--out`、phase-detailの`--max-depth`範囲0〜100が現れる。Nodeの`report.json`とJavaの`validation.txt`はhelp内の出力名例であり、実際の出力形式に差があるとはまだ断定しない。
 - Nodeの固定tagの[README](https://github.com/igapyon/miku-project/blob/v1.1.2/README.md)は、既存CLIを維持して新v1 workflowを別に開発する方針と、内部reference candidateと通常Releaseの違いを説明している。固定tagのNode `package.json`には`engines.node`宣言がなく、最低対応版はそこから確定できない。Javaの固定tag POMはsource / target 1.8だが、Skill側で今回確認するJava実行環境は17とする。
 - 現行版の直前の全体検証結果は17 files / 53 tests passedである。ただしこれは[前回の実施記録](agent-skills-consistency-execution-2026-10-23.md)であり、今回の計画作成時に再実行した結果ではない。
-- 同記録には「Nodeが生成したXLSXをJavaでimportするとPredecessorsが空になる」という既存の異runtime間の差がある。v1.1.2での解消・残存は未確認である。
+- 計画作成時に参照した前回記録では「Nodeが生成したXLSXをJavaでimportするとPredecessorsが空になる」と報告されていた。実装時に旧`0.12.0` artifactと新`1.1.2`を同一fixtureで比較し、この差は`1.1.2`で解消していることを確認した。`1.1.2`では全4経路で依存を保持する一方、import後の日付時刻文字列の表記はNodeとJavaで異なる。
 
 ## 3. 固定する4 asset
 
@@ -177,7 +177,7 @@ focused確認:
 1. activeなruntime pinとfrontmatterのversion / checked日を新artifactへそろえる。操作能力表は実測と一致させ、XML importや新v1 workflowを実行可能として増やさない。MCPの既存tool / resource契約はCLIの更新から推測して変更しない。
 2. docsには公開CLIとbrowser runtime / 内部reference candidateの違い、4 asset、固定tagとdigest、更新command、今回得られた互換性と制限を記録する。
 3. 完了済みの過去計画・実施記録の`0.12.0`を機械的に全置換しない。naming migrationの過去baselineも保持し、現在のpinは最新provenanceを参照する注記を加える。古いhelp依頼をtop-level helpの確認だけで全面解決済みにしない。
-4. 実装時に`npm version 0.12.5 --no-git-tag-version`でSkill packageをpatch更新する。root packageとlockの2か所のversionが一致し、依存packageの解決結果が意図せず変わっていないことを確認する。runtime versionの`1.1.2`をSkill package versionへコピーしない。
+4. 実装時に`npm version 1.1.2 --no-git-tag-version`でSkill package versionを更新する。miku-softのAgent Skillsではpackage versionを同梱runtimeと厳密に連動させる必要はないが、近い版に追従させる運用例がある。今回はNode / Java runtimeの両方が`1.1.2`で、同版との互換性確認を含むためSkill packageも`1.1.2`とする。root packageとlockのversionが一致し、依存packageの解決結果が意図せず変わっていないことを確認する。
 5. bundle smokeの実配布runtime pathを1.1.2へ変更し、展開済み4 assetのSHA-256をsource側と照合する。source側のprovenance testと組み合わせて、最終ZIPのバイトも固定assetであることを確認する。
 6. ZIP中のruntime directoryに新4 basenameだけがあることを確認し、旧版、browser runtime、download tempが混入していないことを確認する。`--version`の期待値はNode / Javaとも`miku-project 1.1.2`とする。
 7. 既存の日本語・空白を含む設置先 / 別workspace / 偽runtimeを使うisolated smokeを維持し、**展開済みSkillのhelperとruntime**でdraft生成とstate summaryを実行する。元repoへの参照で代用しない。
@@ -194,7 +194,7 @@ focused確認:
 ### R112-06: 全体検証、記録、受入判定
 
 1. rootで`npm run build`を一度実行する。このcommandは全testと配布ZIP生成を含むため、同じ状態で直後に`npm test`とZIP buildを全て重複実行しない。focused確認の後に最終全体確認を行い、追加変更や失敗があった部分だけ必要に応じて再確認する。
-2. `bundle/miku-project-skills-0.12.5.zip`が生成され、isolated bundle smokeが通ることを確認する。bundle smoke以外のtestから同じbundle出力先を並列buildしない。
+2. `bundle/miku-project-skills-1.1.2.zip`が生成され、isolated bundle smokeが通ることを確認する。bundle smoke以外のtestから同じbundle出力先を並列buildしない。
 3. 実施記録に環境、4 assetの照合、実際のtest数、CLI / spec差、XLSX4組の結果、制限、package version、適用した共有標準の確認日・取得できるversion / commitを記録する。標準skillのcommitが取得できなければ、その事実を記録する。
 4. ローカルがNode 20 / 24以外でも、その版での結果を記録してローカル作業を完了できる。正式な対応版の最終確認は既存CIの両jobで行う。CIをこの作業から起動せず、通常の後続SCM / 人によるPR操作後の結果を使う。結果がなければ「Node 20 / 24はCI確認待ち」と明記し、成功や全受入完了と書かない。
 5. `git diff --check`、`git status --short`、最終diffを確認する。変更対象がruntime / 必要なadapter / test / docs / package versionに収まり、依存更新、公開workflow変更、ローカルSkill配備などが混ざっていないことを確認する。
@@ -211,19 +211,21 @@ focused確認:
 
 ## 5. miku-soft標準の適用範囲
 
-適用workflowは`igapyon-miku-soft-developer` Maintenance modeと`40-agent-skills-workflow.md`。repository conventions、固定runtime provenance、helpのdocumented similarity、最終配布物の検証を本変更に適用する。
+確認日: 2026-10-23。`igapyon-miku-soft-developer`の参照commitは`ee88c7ce1dab2d5dde5cf2a05acd5660bce7e98a`。適用workflowはMaintenance modeと`40-agent-skills-workflow.md`。repository conventions、固定runtime provenance、helpのdocumented similarity、最終配布物の検証を本変更に適用する。
+
+同階層のpackageとruntime versionの例として、`miku-text-bundle-skills`は両方`1.6.0`、`miku-grep-skills`はpackage`0.10.1`・runtime`0.10.0`、`miku-indexgen-skills`はpackage`1.7.1`・runtime`1.6.2`だった（2026-10-23にローカルcheckoutを確認）。この傾向に合わせ、package versionはruntimeと別の管理値として保ちながら、おおよそ追従させる。今回はNode / Javaの双方が`1.1.2`であるため、packageも`1.1.2`とした。
 
 既存CIはNode 20 / 24、Java 17、明示permissions、現行Action majorで構成済み。共有maintenance backlogのNode 22下限、checksum形式の一般移行、Release命名変更、共有workflow採用等は本runtime更新へ混ぜない。今回扱うのはこのrepositoryの受入先としてのruntime pinと、その消費・配布検証である。
 
 ## 6. 完了チェック
 
-- [ ] R112-00: 開始状態、lockfile依存関係、旧runtime baselineを記録した。
-- [ ] R112-01: 固定4 assetを1.1.2へ更新し、旧4 assetを除き、全hashを確認した。
-- [ ] R112-02: version / provenance / help互換性の回帰確認を更新した。
-- [ ] R112-03: 両runtimeで既存Skill workflow、実argv、strict optionの確認を行った。
-- [ ] R112-04: XLSX4組の交換結果と既存reportの互換性を記録した。
-- [ ] R112-05: active文書、Skill package 0.12.5、最終ZIPの内容と実バイトを同期した。
-- [ ] R112-06-local: `npm run build`、最終diff、実施記録を完了した。
+- [x] R112-00: 開始状態、lockfile依存関係、旧runtime baselineを記録した。
+- [x] R112-01: 固定4 assetを1.1.2へ更新し、旧4 assetを除き、全hashを確認した。
+- [x] R112-02: version / provenance / help互換性の回帰確認を更新した。
+- [x] R112-03: 両runtimeで既存Skill workflow、実argv、strict optionの確認を行った。
+- [x] R112-04: XLSX4組の交換結果と既存reportの互換性を記録した。
+- [x] R112-05: active文書、Skill package 1.1.2、最終ZIPの内容と実バイトを同期した。
+- [x] R112-06-local: `npm run build`、最終diff、実施記録を完了した。
 - [ ] R112-06-ci: Node 20 / 24 + Java 17の既存CI結果を確認し、正式な受入を完了した。
 
 この計画の実装完了に、commit、push、tag、PR作成、Release操作、installed Skillへの同期は含めない。これらは後続の明示された作業として扱う。

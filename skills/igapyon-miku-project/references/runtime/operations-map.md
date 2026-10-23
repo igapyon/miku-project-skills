@@ -95,7 +95,7 @@ similarity, not byte-for-byte identity. The executable compatibility fixture is
 vocabulary and Java-only / Node-only operations while checking exit status,
 stdout, stderr, and the final newline.
 
-The bundled Java and Node.js artifacts are pinned to `0.12.0`. Their top-level
+The bundled Java and Node.js artifacts are pinned to `1.1.2`. Their top-level
 help output provides the current usage list and general I/O rules. This map does
 not claim that command-specific help has been verified as a shared contract.
 The broader AI-era help request is tracked in the
@@ -268,7 +268,7 @@ first, then the closest Node.js command when one exists.
 | XML export | `java -jar <skill-root>/runtime/miku-project-<version>.jar export xml --in workbook.json --out project.xml` | `node <skill-root>/runtime/miku-project-<version>.mjs export xml --in workbook.json --out project.xml` | Same purpose. |
 | Structural XLSX export | `java -jar <skill-root>/runtime/miku-project-<version>.jar export xlsx --in workbook.json --out workbook.xlsx` | `node <skill-root>/runtime/miku-project-<version>.mjs export xlsx --in workbook.json --out workbook.xlsx` | Same purpose. |
 | Structural XLSX validation | `java -jar <skill-root>/runtime/miku-project-<version>.jar validate xlsx --in workbook.xlsx` | Not available as a direct Node.js command | Java validates workbook XLSX directly. |
-| Structural XLSX replace import | `java -jar <skill-root>/runtime/miku-project-<version>.jar import xlsx --in workbook.xlsx --out workbook.json` | `node <skill-root>/runtime/miku-project-<version>.mjs import xlsx --in workbook.xlsx --out workbook.json` | Both current `0.12.0` runtimes import XLSX; merge remains Java-only. |
+| Structural XLSX replace import | `java -jar <skill-root>/runtime/miku-project-<version>.jar import xlsx --in workbook.xlsx --out workbook.json` | `node <skill-root>/runtime/miku-project-<version>.mjs import xlsx --in workbook.xlsx --out workbook.json` | Both current `1.1.2` runtimes import XLSX; merge remains Java-only. |
 | Structural XLSX merge import | `java -jar <skill-root>/runtime/miku-project-<version>.jar merge xlsx --state workbook.json --in workbook.xlsx --out workbook.next.json` | Not available as a direct Node.js command | Java merges XLSX edits directly. |
 | Report bundle | `java -jar <skill-root>/runtime/miku-project-<version>.jar report all --in workbook.json --out report-bundle.zip` | `node <skill-root>/runtime/miku-project-<version>.mjs report all --in workbook.json --out report-bundle.zip` | Same purpose. |
 | Report directory | `java -jar <skill-root>/runtime/miku-project-<version>.jar report dir --in workbook.json --out report.dir` | Not available as a direct Node.js command | Java can write an unpacked report directory. |
